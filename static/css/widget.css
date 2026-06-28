@@ -280,9 +280,6 @@
   }
 }
 @media(max-width:480px){
-  /* Hide widget entirely on very small phones — calendar is accessible via nav */
-  #cal-widget{display:none}
-  /* Show topstrip more compactly */
   .today-topstrip{padding:8px 12px}
   .today-greeting-inline{font-size:12px}
 }

@@ -57,6 +57,7 @@
 #app-shell.sidebar-collapsed .sb-sub,
 #app-shell.sidebar-collapsed .sb-user-info,
 #app-shell.sidebar-collapsed .sb-logout,
+#app-shell.sidebar-collapsed .sb-delete-account,
 #app-shell.sidebar-collapsed .sb-section-label,
 #app-shell.sidebar-collapsed .sb-link-text,
 #app-shell.sidebar-collapsed .sb-link-count,
@@ -65,6 +66,29 @@
 #app-shell.sidebar-collapsed .sb-link{justify-content:center;padding:9px}
 #app-shell.sidebar-collapsed .sb-brand{justify-content:center;padding:0}
 #app-shell.sidebar-collapsed .sb-user{justify-content:center;padding:9px}
+
+/* Mobile sidebar overlay — always show logout/delete regardless of collapsed state */
+@media(max-width:900px){
+  #sidebar.mobile-open .sb-logout,
+  #sidebar.mobile-open .sb-delete-account,
+  #sidebar.mobile-open .sb-user-info,
+  #sidebar.mobile-open .sb-name,
+  #sidebar.mobile-open .sb-sub,
+  #sidebar.mobile-open .sb-link-text,
+  #sidebar.mobile-open .sb-link-count,
+  #sidebar.mobile-open .sb-quick-add,
+  #sidebar.mobile-open .sb-summary,
+  #sidebar.mobile-open .sb-section-label{display:flex}
+  #sidebar.mobile-open .sb-link-count,
+  #sidebar.mobile-open .sb-summary,
+  #sidebar.mobile-open .sb-section-label{display:block}
+  #sidebar.mobile-open .sb-link{justify-content:flex-start;padding:8px 10px}
+  #sidebar.mobile-open .sb-brand{justify-content:flex-start;padding:0 14px}
+  #sidebar.mobile-open .sb-user{justify-content:flex-start;padding:10px 12px}
+  /* bigger touch targets */
+  .sb-logout{width:36px;height:36px;font-size:16px}
+  .sb-delete-account{width:32px;height:32px;font-size:14px;opacity:.7}
+}
 
 /* ── Topbar ── */
 #topbar{grid-column:2;grid-row:1;background:var(--bg-surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0}
