@@ -4,6 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TYME TYBLE</title>
+  <script>
+    (function(){
+      const c=document.createElement('canvas'); c.width=64; c.height=64;
+      const x=c.getContext('2d');
+      const g=x.createLinearGradient(0,0,64,64);
+      g.addColorStop(0,'#7c6af7'); g.addColorStop(0.5,'#8b5cf6'); g.addColorStop(1,'#ec4899');
+      x.fillStyle=g; x.beginPath();
+      x.roundRect(0,0,64,64,14); x.fill();
+      x.font='38px serif'; x.textAlign='center'; x.textBaseline='middle';
+      x.fillText('📅',32,34);
+      const l=document.createElement('link'); l.rel='icon'; l.href=c.toDataURL();
+      document.head.appendChild(l);
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap">
   <link rel="stylesheet" href="/static/css/base.css">

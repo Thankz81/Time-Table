@@ -1,7 +1,10 @@
 /* auth.js */
 'use strict';
 window.Auth = (() => {
-  const AVATARS=['🧑','👩','🧔','👨','🧑‍💻','👩‍💻','🦸','🦹','🧙','🧝','🎩','🐱','🦊','🐸','🐧','🦄'];
+  const AVATARS=[
+    '🐱','🐶','🦊','🐸','🐧','🦄','🐯','🦁','🐻','🐼',
+    '🐨','🦝','🦋','🐺','🦅','🐙','🦈','🐲','🦖','🦕'
+  ];
   let _selectedAvatar=AVATARS[0], _onSuccess=null;
 
   function init(cb) {
