@@ -64,7 +64,7 @@ window.NotesView = (() => {
           <span class="nc-date">${n.date}</span>
           <button class="nc-del" data-id="${n.id}" title="Delete">✕</button>
         </div>`;
-      card.onclick = () => NoteEditor.open(n, _loadAndRender);
+      card.onclick = e => { if (e.target.closest('.nc-del')) return; Preview.openNote(n, _loadAndRender); };
       card.querySelector('.nc-del').onclick = async e => {
         e.stopPropagation();
         card.style.transition = 'all .18s'; card.style.opacity = '0'; card.style.transform = 'scale(.94)';

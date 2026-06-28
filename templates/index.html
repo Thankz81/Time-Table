@@ -232,6 +232,13 @@
         </div>
       </header>
 
+      <!-- Mobile quote strip (hidden on desktop, shown on mobile where topbar-nav is hidden) -->
+      <div id="mobile-quote-strip">
+        <span class="mqs-text" id="mqs-text"></span>
+        <span class="mqs-author" id="mqs-author"></span>
+        <button class="mqs-refresh" id="mqs-refresh" title="New quote">↻</button>
+      </div>
+
       <!-- View containers -->
       <div id="view-today"    class="view hidden"></div>
       <div id="view-calendar" class="view hidden"></div>
@@ -317,18 +324,18 @@
               <span>Time</span>
               <input type="time" id="tem-time" class="tem-select">
             </div>
-            <div class="tem-meta-item">
+            <div class="tem-meta-item tem-fc-item">
               <span>Font Color</span>
-              <select class="tem-select" id="tem-font-color">
-                <option value="">Default</option>
-                <option value="#f87171">Red</option>
-                <option value="#fbbf24">Yellow</option>
-                <option value="#34d399">Green</option>
-                <option value="#60a5fa">Blue</option>
-                <option value="#f472b6">Pink</option>
-                <option value="#a78bfa">Purple</option>
-                <option value="#ffffff">White</option>
-              </select>
+              <div class="rte-color-dots" id="tem-font-color-dots">
+                <div class="rcd-dot rcd-default active" data-color="" title="Default">A</div>
+                <div class="rcd-dot" data-color="#f87171" title="Red"    style="background:#f87171"></div>
+                <div class="rcd-dot" data-color="#fbbf24" title="Yellow" style="background:#fbbf24"></div>
+                <div class="rcd-dot" data-color="#34d399" title="Green"  style="background:#34d399"></div>
+                <div class="rcd-dot" data-color="#60a5fa" title="Blue"   style="background:#60a5fa"></div>
+                <div class="rcd-dot" data-color="#f472b6" title="Pink"   style="background:#f472b6"></div>
+                <div class="rcd-dot" data-color="#a78bfa" title="Purple" style="background:#a78bfa"></div>
+                <div class="rcd-dot" data-color="#ffffff" title="White"  style="background:#fff;border-color:#555"></div>
+              </div>
             </div>
           </div>
           <!-- Row 2: Card color -->
@@ -381,15 +388,15 @@
             <button type="button" class="rte-btn" id="rte-img-btn" title="Insert image">🖼</button>
             <input type="file" id="rte-img-input" accept="image/*" class="hidden">
             <div class="rte-sep"></div>
-            <select class="rte-btn rte-color-sel" id="rte-color" title="Text color">
-              <option value="">Color</option>
-              <option value="#f87171">Red</option>
-              <option value="#fbbf24">Yellow</option>
-              <option value="#34d399">Green</option>
-              <option value="#60a5fa">Blue</option>
-              <option value="#f472b6">Pink</option>
-              <option value="#a78bfa">Purple</option>
-            </select>
+            <div class="rte-color-dots" id="rte-color-dots" title="Text color">
+              <div class="rcd-dot rcd-default active" data-color="" title="Default">A</div>
+              <div class="rcd-dot" data-color="#f87171" title="Red"    style="background:#f87171"></div>
+              <div class="rcd-dot" data-color="#fbbf24" title="Yellow" style="background:#fbbf24"></div>
+              <div class="rcd-dot" data-color="#34d399" title="Green"  style="background:#34d399"></div>
+              <div class="rcd-dot" data-color="#60a5fa" title="Blue"   style="background:#60a5fa"></div>
+              <div class="rcd-dot" data-color="#f472b6" title="Pink"   style="background:#f472b6"></div>
+              <div class="rcd-dot" data-color="#a78bfa" title="Purple" style="background:#a78bfa"></div>
+            </div>
           </div>
           <div id="tem-description" class="rte-content" contenteditable="true" data-placeholder="Add description, notes, or attachments…"></div>
         </div>
@@ -415,16 +422,6 @@
               <div class="cp-dot cp-blue"   data-color="blue"   title="Blue"></div>
               <div class="cp-dot cp-pink"   data-color="pink"   title="Pink"></div>
             </div>
-            <span class="nem-picker-label">Font:</span>
-            <div class="color-picker" id="nem-font-colors">
-              <div class="cp-dot nem-fc active" data-fc="" title="Default" style="background:var(--tx3);font-size:9px;color:#fff;display:flex;align-items:center;justify-content:center">A</div>
-              <div class="cp-dot nem-fc" data-fc="#f87171" title="Red"    style="background:#f87171"></div>
-              <div class="cp-dot nem-fc" data-fc="#fbbf24" title="Yellow" style="background:#fbbf24"></div>
-              <div class="cp-dot nem-fc" data-fc="#34d399" title="Green"  style="background:#34d399"></div>
-              <div class="cp-dot nem-fc" data-fc="#60a5fa" title="Blue"   style="background:#60a5fa"></div>
-              <div class="cp-dot nem-fc" data-fc="#f472b6" title="Pink"   style="background:#f472b6"></div>
-              <div class="cp-dot nem-fc" data-fc="#a78bfa" title="Purple" style="background:#a78bfa"></div>
-            </div>
             <button class="tem-close" id="nem-close">✕</button>
           </div>
         </div>
@@ -439,19 +436,43 @@
           <button type="button" class="rte-btn" id="nem-img-btn">🖼</button>
           <input type="file" id="nem-img-input" accept="image/*" class="hidden">
           <div class="rte-sep"></div>
-          <select class="rte-btn rte-color-sel" id="nem-color-sel">
-            <option value="">Color</option>
-            <option value="#f87171">Red</option>
-            <option value="#fbbf24">Yellow</option>
-            <option value="#34d399">Green</option>
-            <option value="#60a5fa">Blue</option>
-            <option value="#f472b6">Pink</option>
-          </select>
+          <div class="rte-color-dots" id="nem-color-dots" title="Text color">
+            <div class="rcd-dot rcd-default active" data-color="" title="Default">A</div>
+            <div class="rcd-dot" data-color="#f87171" title="Red"    style="background:#f87171"></div>
+            <div class="rcd-dot" data-color="#fbbf24" title="Yellow" style="background:#fbbf24"></div>
+            <div class="rcd-dot" data-color="#34d399" title="Green"  style="background:#34d399"></div>
+            <div class="rcd-dot" data-color="#60a5fa" title="Blue"   style="background:#60a5fa"></div>
+            <div class="rcd-dot" data-color="#f472b6" title="Pink"   style="background:#f472b6"></div>
+            <div class="rcd-dot" data-color="#a78bfa" title="Purple" style="background:#a78bfa"></div>
+          </div>
         </div>
         <div id="nem-content" class="rte-content" contenteditable="true" data-placeholder="Write your note…"></div>
         <div class="tem-footer">
           <button class="tem-btn-delete" id="nem-delete">Delete Note</button>
           <button class="tem-btn-save"   id="nem-save">Save Note</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preview drawer (shared for task/note/deadline) -->
+    <div id="preview-backdrop" class="modal-backdrop hidden">
+      <div id="preview-drawer">
+        <div id="preview-drag-handle"></div>
+        <div id="preview-header">
+          <div id="preview-icon-badge"></div>
+          <div id="preview-title-wrap">
+            <div id="preview-title"></div>
+            <div id="preview-meta-chips"></div>
+          </div>
+          <button id="preview-close">✕</button>
+        </div>
+        <div id="preview-body"></div>
+        <div id="preview-footer">
+          <button id="preview-delete" class="preview-btn-del">Delete</button>
+          <div style="display:flex;gap:8px;margin-left:auto">
+            <button id="preview-status-toggle" class="preview-btn-act hidden"></button>
+            <button id="preview-edit" class="preview-btn-edit">Edit</button>
+          </div>
         </div>
       </div>
     </div>
@@ -496,6 +517,7 @@
   <script src="/static/js/components/miniCalendar.js"></script>
   <script src="/static/js/components/editor.js"></script>
   <script src="/static/js/components/panel.js"></script>
+  <script src="/static/js/components/preview.js"></script>
   <script src="/static/js/views/today.js"></script>
   <script src="/static/js/views/calendar.js"></script>
   <script src="/static/js/views/tasks.js"></script>

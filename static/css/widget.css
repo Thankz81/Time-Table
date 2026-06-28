@@ -266,6 +266,30 @@
   flex-shrink:0;
 }
 
+/* ── Topstrip quote ── */
+.today-topstrip-quote{
+  display:flex;align-items:center;gap:6px;
+  flex:1;min-width:0;overflow:hidden;
+  padding:0 16px;
+}
+.ttq-text{
+  font-size:11.5px;font-style:italic;color:var(--tx3);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  flex:1;min-width:0;transition:opacity .18s;
+}
+.ttq-author{
+  font-size:10.5px;font-weight:600;color:var(--accent);
+  opacity:.75;white-space:nowrap;flex-shrink:0;transition:opacity .18s;
+}
+.ttq-refresh{
+  width:20px;height:20px;border-radius:50%;
+  border:1px solid var(--border);background:transparent;
+  color:var(--tx3);font-size:11px;cursor:pointer;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all .2s;
+}
+.ttq-refresh:hover{background:var(--accent-dim);color:var(--accent);border-color:var(--accent-border);transform:rotate(180deg)}
+
 /* ── Mobile ── */
 @media(max-width:768px){
   /* Move widget away from bottom-right on mobile — sits above bottom safe area */
@@ -282,4 +306,5 @@
 @media(max-width:480px){
   .today-topstrip{padding:8px 12px}
   .today-greeting-inline{font-size:12px}
+  .today-topstrip-quote{display:none}
 }

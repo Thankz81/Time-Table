@@ -27,7 +27,26 @@ window.Editor = (() => {
       });
     });
 
-    // Color selector
+    // Color dots — apply foreColor to selected text
+    toolbarEl.querySelectorAll('.rte-color-dots .rcd-dot').forEach(dot => {
+      dot.addEventListener('mousedown', e => {
+        e.preventDefault(); // keep selection alive
+        const color = dot.dataset.color;
+        if (color) {
+          document.execCommand('foreColor', false, color);
+        } else {
+          // "Default" — remove foreColor by applying inherited color
+          document.execCommand('removeFormat', false, null);
+        }
+        // Mark active
+        dot.closest('.rte-color-dots').querySelectorAll('.rcd-dot').forEach(d => d.classList.remove('active'));
+        dot.classList.add('active');
+        contentEl.focus();
+        _updateActive(toolbarEl);
+      });
+    });
+
+    // Legacy <select> fallback (kept for safety, no-ops if no select present)
     const colorSel = toolbarEl.querySelector('.rte-color-sel');
     if (colorSel) {
       colorSel.addEventListener('change', () => {

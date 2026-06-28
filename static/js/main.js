@@ -37,9 +37,12 @@ window.TaskEditor = (() => {
     // Time
     const timeEl = document.getElementById('tem-time');
     if (timeEl) timeEl.value = task ? (task.time||'') : '';
-    // Font color select
-    const fcSel = document.getElementById('tem-font-color');
-    if (fcSel) fcSel.value = task ? (task.font_color||'') : '';
+    // Font color dots — restore active state and apply live preview to title
+    const fcActive = task ? (task.font_color||'') : '';
+    document.querySelectorAll('#tem-font-color-dots .rcd-dot').forEach(d => {
+      d.classList.toggle('active', d.dataset.color === fcActive);
+    });
+    titleEl.style.color = fcActive || '';
 
     // BG color picker
     document.querySelectorAll('#tem-colors .cp-dot').forEach(d=>{
@@ -121,6 +124,15 @@ window.TaskEditor = (() => {
       });
     });
 
+    // Font color dots — live-preview on title
+    document.querySelectorAll('#tem-font-color-dots .rcd-dot').forEach(dot => {
+      dot.addEventListener('click', () => {
+        document.querySelectorAll('#tem-font-color-dots .rcd-dot').forEach(d => d.classList.remove('active'));
+        dot.classList.add('active');
+        document.getElementById('tem-title').style.color = dot.dataset.color || '';
+      });
+    });
+
     // Recurring checkbox shows/hides weekday section
     document.getElementById('tem-recur-toggle').addEventListener('change', function() {
       const expand = document.getElementById('tem-recur-expand');
@@ -153,7 +165,8 @@ window.TaskEditor = (() => {
       const date     = document.getElementById('tem-date').value;
       const desc     = Editor.getHTML(document.getElementById('tem-description'));
       const taskTime  = (document.getElementById('tem-time')||{}).value || '';
-      const fontColor = (document.getElementById('tem-font-color')||{}).value || '';
+      const fcDot = document.querySelector('#tem-font-color-dots .rcd-dot.active');
+      const fontColor = fcDot ? (fcDot.dataset.color || '') : '';
       const recurToggle = document.getElementById('tem-recur-toggle');
       const isRecur = recurToggle && recurToggle.checked;
       const recurEnd = isRecur ? ((document.getElementById('tem-recur-end')||{}).value || '') : '';
@@ -230,10 +243,7 @@ window.NoteEditor = (() => {
       d.classList.toggle('active', d.dataset.color===_color);
     });
 
-    // Font color picker
-    document.querySelectorAll('#nem-font-colors .nem-fc').forEach(d=>{
-      d.classList.toggle('active', (d.dataset.fc||'')=== _fontColor);
-    });
+    // Font color no longer in header — cleared
 
     backdrop.classList.remove('hidden');
     document.getElementById('nem-title').focus();
@@ -266,13 +276,7 @@ window.NoteEditor = (() => {
       });
     });
 
-    // Font color picker
-    document.querySelectorAll('#nem-font-colors .nem-fc').forEach(dot=>{
-      dot.addEventListener('click', ()=>{
-        document.querySelectorAll('#nem-font-colors .nem-fc').forEach(d=>d.classList.remove('active'));
-        dot.classList.add('active'); _fontColor = dot.dataset.fc || '';
-      });
-    });
+    // Note font color is now set via toolbar color dots (per-selection), not a header picker
 
     document.getElementById('nem-save').onclick = async () => {
       const title   = document.getElementById('nem-title').value.trim();
@@ -405,6 +409,72 @@ async function _refreshSidebarSummary(){
   }catch(_){}
 }
 
+/* ── Quote Banner (topbar + mobile strip) ───────────────────── */
+window.QuoteBanner = (() => {
+  const QUOTES = [
+    { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+    { text: "It always seems impossible until it's done.", author: "Nelson Mandela" },
+    { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+    { text: "You don't have to be great to start, but you have to start to be great.", author: "Zig Ziglar" },
+    { text: "Focus on being productive instead of busy.", author: "Tim Ferriss" },
+    { text: "Action is the foundational key to all success.", author: "Pablo Picasso" },
+    { text: "Either you run the day or the day runs you.", author: "Jim Rohn" },
+    { text: "The key is not to prioritize what's on your schedule, but to schedule your priorities.", author: "Stephen Covey" },
+    { text: "Productivity is never an accident. It is always the result of a commitment to excellence.", author: "Paul J. Meyer" },
+    { text: "Do the hard jobs first. The easy jobs will take care of themselves.", author: "Dale Carnegie" },
+    { text: "You can always find a distraction if you're looking for one.", author: "Tom Kite" },
+    { text: "Work is hard. Distractions are plentiful. And time is short.", author: "Adam Hochschild" },
+    { text: "Until we can manage time, we can manage nothing else.", author: "Peter Drucker" },
+    { text: "Lost time is never found again.", author: "Benjamin Franklin" },
+    { text: "One day or day one. You decide.", author: "Paulo Coelho" },
+    { text: "The difference between ordinary and extraordinary is that little extra.", author: "Jimmy Johnson" },
+    { text: "Amateurs sit and wait for inspiration, the rest of us just get up and go to work.", author: "Stephen King" },
+    { text: "Your future is created by what you do today, not tomorrow.", author: "Robert Kiyosaki" },
+    { text: "Time you enjoy wasting is not wasted time.", author: "Marthe Troly-Curtin" },
+    { text: "Success is the sum of small efforts, repeated day in and day out.", author: "Robert Collier" },
+    { text: "Someday is not a day of the week.", author: "Denise Brennan-Nelson" },
+    { text: "The most effective way to do it is to do it.", author: "Amelia Earhart" },
+    { text: "If you spend too much time thinking about a thing, you'll never get it done.", author: "Bruce Lee" },
+    { text: "Start where you are. Use what you have. Do what you can.", author: "Arthur Ashe" },
+    { text: "Energy and persistence conquer all things.", author: "Benjamin Franklin" },
+  ];
+  let _lastIdx = -1;
+
+  function _set(q) {
+    const ids = [['ttq-text','ttq-author'],['mqs-text','mqs-author']];
+    ids.forEach(([tId, aId]) => {
+      const t = document.getElementById(tId), a = document.getElementById(aId);
+      if (!t) return;
+      t.style.opacity = '0'; a.style.opacity = '0';
+      setTimeout(() => {
+        t.textContent = q.text; a.textContent = '— ' + q.author;
+        t.style.opacity = '1'; a.style.opacity = '1';
+      }, 180);
+    });
+  }
+
+  function next() {
+    let idx;
+    do { idx = Math.floor(Math.random() * QUOTES.length); } while (idx === _lastIdx && QUOTES.length > 1);
+    _lastIdx = idx;
+    _set(QUOTES[idx]);
+  }
+
+  function init() {
+    next();
+    const mqs = document.getElementById('mqs-refresh');
+    if (mqs) mqs.onclick = next;
+  }
+
+  function wireToday() {
+    const btn = document.getElementById('ttq-refresh');
+    if (btn) btn.onclick = next;
+    next();
+  }
+
+  return { init, next, wireToday };
+})();
+
 /* ── Boot app ───────────────────────────────────────────────── */
 function bootApp(user) {
   Store.setUser(user);
@@ -502,9 +572,13 @@ function bootApp(user) {
     }
   };
 
-  // Init editors
+  // Init editors + preview
   TaskEditor._init();
   NoteEditor._init();
+  Preview._init();
+
+  // Quote banner (topbar + mobile)
+  QuoteBanner.init();
 
   // Init floating calendar widget
   MiniCalendar.init(date => {
@@ -526,7 +600,7 @@ function bootApp(user) {
   });
 
   // Register routes
-  Router.on('today',     () => TodayView.render());
+  Router.on('today',     () => { TodayView.render(); QuoteBanner.wireToday(); });
   Router.on('calendar',  () => CalendarView.render());
   Router.on('work',      () => WorkView.render());
   Router.on('tasks',     () => { Router.navigate('work'); WorkView.switchTab('tasks'); });

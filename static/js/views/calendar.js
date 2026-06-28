@@ -152,7 +152,7 @@ window.CalendarView = (() => {
       chip.className = 'cal-chip cal-chip-dl' + (d.urgent ? ' urgent' : '');
       chip.title = d.title + (d.time ? ` @ ${d.time}` : '');
       chip.innerHTML = `<span class="cch-icon">⚑</span><span class="cch-text">${_e(d.title)}</span>${d.time?`<span class="cch-time">${d.time}</span>`:''}`;
-      chip.onclick = e => { e.stopPropagation(); Panel.open(date, () => _loadData()); };
+      chip.onclick = e => { e.stopPropagation(); Preview.openDeadline(d, () => _loadData()); };
       container.appendChild(chip);
       shown++;
     });
@@ -161,10 +161,21 @@ window.CalendarView = (() => {
     (items.tasks || []).forEach(t => {
       if (shown >= MAX) return;
       const chip = document.createElement('div');
-      chip.className = `cal-chip cal-chip-task status-${t.status}`;
+      chip.className = `cal-chip cal-chip-task status-${t.status}${t.bg_color ? ' tc-'+t.bg_color : ''}`;
       chip.title = t.title;
+      // Apply bg_color tint + font_color
+      if (t.bg_color) {
+        const TINTS = {yellow:'rgba(245,158,11,.18)',green:'rgba(62,207,142,.18)',blue:'rgba(96,165,250,.18)',pink:'rgba(244,114,182,.18)',purple:'rgba(167,139,250,.18)'};
+        const BORDERS = {yellow:'rgba(245,158,11,.5)',green:'rgba(62,207,142,.5)',blue:'rgba(96,165,250,.5)',pink:'rgba(244,114,182,.5)',purple:'rgba(167,139,250,.5)'};
+        const COLORS  = {yellow:'#f59e0b',green:'#3ecf8e',blue:'#60a5fa',pink:'#f472b6',purple:'#a78bfa'};
+        chip.style.background   = TINTS[t.bg_color]  || '';
+        chip.style.borderLeftColor = BORDERS[t.bg_color] || '';
+        chip.style.color        = t.font_color || COLORS[t.bg_color] || '';
+      } else if (t.font_color) {
+        chip.style.color = t.font_color;
+      }
       chip.innerHTML = `<span class="cch-check${t.status==='done'?' done':''}"></span><span class="cch-text">${_e(t.title)}</span>`;
-      chip.onclick = e => { e.stopPropagation(); TaskEditor.open(t, () => _loadData()); };
+      chip.onclick = e => { e.stopPropagation(); Preview.openTask(t, () => _loadData()); };
       container.appendChild(chip);
       shown++;
     });
@@ -176,8 +187,18 @@ window.CalendarView = (() => {
       chip.className = `cal-chip cal-chip-note nc-${n.color}`;
       const preview = _stripHTML(n.content).slice(0, 22);
       chip.title = n.title || preview;
+      // Apply note color tint
+      if (n.color && n.color !== 'default') {
+        const NC_TINTS  = {yellow:'rgba(245,158,11,.15)',green:'rgba(62,207,142,.15)',blue:'rgba(96,165,250,.15)',pink:'rgba(244,114,182,.15)'};
+        const NC_COLORS = {yellow:'#f59e0b',green:'#3ecf8e',blue:'#60a5fa',pink:'#f472b6'};
+        chip.style.background      = NC_TINTS[n.color]  || '';
+        chip.style.borderLeftColor = n.font_color || NC_COLORS[n.color] || '';
+        chip.style.color           = n.font_color || NC_COLORS[n.color] || '';
+      } else if (n.font_color) {
+        chip.style.color = n.font_color;
+      }
       chip.innerHTML = `<span class="cch-icon">✎</span><span class="cch-text">${_e(n.title || preview)}</span>`;
-      chip.onclick = e => { e.stopPropagation(); NoteEditor.open(n, () => _loadData()); };
+      chip.onclick = e => { e.stopPropagation(); Preview.openNote(n, () => _loadData()); };
       container.appendChild(chip);
       shown++;
     });

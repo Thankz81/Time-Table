@@ -141,7 +141,10 @@ window.TasksView = (() => {
         catch(err) { Toast.show(err.message, 'error'); }
       }, 180);
     };
-    div.onclick = () => TaskEditor.open(t, _loadAndRender);
+    div.onclick = e => {
+      if (e.target.closest('.tr-check,.tr-actions')) return;
+      Preview.openTask(t, _loadAndRender);
+    };
     return div;
   }
 

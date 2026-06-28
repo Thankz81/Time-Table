@@ -19,6 +19,11 @@ window.TodayView = (() => {
           <span class="today-greeting-inline">${greeting}, <strong>${user ? user.username : ''}</strong></span>
           <span class="today-date-inline">${DAYS[n.getDay()]}, ${MONTHS_FULL[n.getMonth()]} ${n.getDate()}</span>
         </div>
+        <div class="today-topstrip-quote" id="today-topstrip-quote">
+          <span class="ttq-text" id="ttq-text"></span>
+          <span class="ttq-author" id="ttq-author"></span>
+          <button class="ttq-refresh" id="ttq-refresh" title="New quote">↻</button>
+        </div>
         <div class="today-clock-inline" id="today-clock"></div>
       </div>
 
@@ -213,7 +218,7 @@ window.TodayView = (() => {
         catch(err) { Toast.show(err.message, 'error'); }
       };
       div.querySelector('.trow-edit').onclick = e => { e.stopPropagation(); TaskEditor.open(t, () => _loadData(today)); };
-      div.onclick = () => TaskEditor.open(t, () => _loadData(today));
+      div.onclick = e => { if(e.target.closest('.trow-check,.trow-edit')) return; Preview.openTask(t, () => _loadData(today)); };
       el.appendChild(div);
     });
   }
@@ -246,6 +251,8 @@ window.TodayView = (() => {
           ${countdown ? `<div class="dl-row-countdown ${cls}">${countdown}</div>` : ''}
         </div>
         ${d.urgent ? '<span class="badge b-urgent">!</span>' : ''}`;
+      div.style.cursor = 'pointer';
+      div.onclick = () => Preview.openDeadline(d, () => _loadData(today));
       el.appendChild(div);
     });
   }
@@ -261,13 +268,14 @@ window.TodayView = (() => {
     notes.forEach(n => {
       const div = document.createElement('div');
       div.className = `today-note-card nc-${n.color}`;
+      if (n.font_color) div.style.color = n.font_color;
       const preview = _strip(n.content).slice(0, 100);
       const thumb = _firstImage(n.content);
       div.innerHTML = `
         ${n.title ? `<div class="note-mini-title">${_e(n.title)}</div>` : ''}
         ${thumb ? `<img class="nc-thumb-mini" src="${thumb}" alt="">` : ''}
         ${_e(preview)}`;
-      div.onclick = () => NoteEditor.open(n, () => _loadData(today));
+      div.onclick = () => Preview.openNote(n, () => _loadData(today));
       el.appendChild(div);
     });
   }

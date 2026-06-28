@@ -116,13 +116,16 @@ window.DeadlinesView = (() => {
       <div class="dl-actions">
         <button class="dl-act del" title="Delete" data-a="del">✕</button>
       </div>`;
-    el.querySelector('[data-a="del"]').onclick=async()=>{
+    el.querySelector('[data-a="del"]').onclick=async e=>{
+      e.stopPropagation();
       el.style.transition='all .22s'; el.style.opacity='0';
       setTimeout(async()=>{
         try{await API.deleteDeadline(d.id);await _loadAndRender();Toast.show('Deadline deleted');}
         catch(err){Toast.show(err.message,'error');}
       },200);
     };
+    el.onclick = e => { if(e.target.closest('.dl-actions')) return; Preview.openDeadline(d, _loadAndRender); };
+    el.style.cursor='pointer';
     return el;
   }
 
