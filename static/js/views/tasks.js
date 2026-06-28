@@ -107,6 +107,7 @@ window.TasksView = (() => {
     const div = document.createElement('div');
     div.className = `task-row priority-${t.priority}`;
     const isDone = t.status === 'done';
+    const thumb = _firstImage(t.description);
     div.innerHTML = `
       <div class="tr-check${isDone ? ' done' : ''}"></div>
       <div class="tr-body">
@@ -116,6 +117,7 @@ window.TasksView = (() => {
           <span class="tr-date">${t.date}</span>
         </div>
       </div>
+      ${thumb ? `<img class="tr-thumb" src="${thumb}" alt="">` : ''}
       <div class="tr-actions">
         <button class="tr-act" data-a="edit" title="Edit">✎</button>
         <button class="tr-act del" data-a="del" title="Delete">✕</button>
@@ -183,6 +185,7 @@ window.TasksView = (() => {
   }
 
   function _e(s) { if (!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function _firstImage(s) { const d = document.createElement('div'); d.innerHTML = s || ''; const img = d.querySelector('img'); return img ? img.src : null; }
 
   return { render };
 })();

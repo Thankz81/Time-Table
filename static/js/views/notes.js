@@ -53,10 +53,12 @@ window.NotesView = (() => {
     filtered.forEach(n => {
       const card = document.createElement('div');
       card.className = `note-card nc-${n.color}`;
-      const preview = _strip(n.content).slice(0, 140);
+      const preview = _strip(n.content).slice(0, 120);
+      const thumb = _firstImage(n.content);
       card.innerHTML = `
         ${n.title ? `<div class="nc-title">${_e(n.title)}</div>` : ''}
-        <div class="nc-preview">${_e(preview)}${preview.length === 140 ? '…' : ''}</div>
+        ${thumb ? `<img class="nc-thumb" src="${thumb}" alt="">` : ''}
+        <div class="nc-preview">${_e(preview)}${preview.length === 120 ? '…' : ''}</div>
         <div class="nc-footer">
           <span class="nc-date">${n.date}</span>
           <button class="nc-del" data-id="${n.id}" title="Delete">✕</button>
@@ -76,6 +78,7 @@ window.NotesView = (() => {
 
   function _e(s) { if (!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function _strip(s) { const d = document.createElement('div'); d.innerHTML = s || ''; return d.textContent || ''; }
+  function _firstImage(s) { const d = document.createElement('div'); d.innerHTML = s || ''; const img = d.querySelector('img'); return img ? img.src : null; }
 
   return { render };
 })();

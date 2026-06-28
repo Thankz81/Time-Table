@@ -55,6 +55,11 @@ class Task(db.Model):
     description = db.Column(db.Text, nullable=True)   # rich HTML content
     status      = db.Column(db.String(20), nullable=False, default='todo')
     priority    = db.Column(db.String(10), nullable=False, default='normal')
+    bg_color    = db.Column(db.String(20), nullable=True)   # e.g. 'yellow','green','blue','pink'
+    font_color  = db.Column(db.String(20), nullable=True)   # css color value
+    recur_id    = db.Column(db.Integer, nullable=True, index=True)  # shared id linking recurring siblings
+    recur_days  = db.Column(db.String(20), nullable=True)  # comma-sep weekday nums: '0,2,4' = Mon,Wed,Fri
+    recur_end   = db.Column(db.String(10), nullable=True)  # YYYY-MM-DD end date (inclusive)
     created_at  = db.Column(db.DateTime, default=datetime.utcnow)
 
     def to_dict(self):
@@ -62,6 +67,11 @@ class Task(db.Model):
             'id': self.id, 'date': self.date,
             'title': self.title, 'description': self.description or '',
             'status': self.status, 'priority': self.priority,
+            'bg_color': self.bg_color or '',
+            'font_color': self.font_color or '',
+            'recur_id': self.recur_id,
+            'recur_days': self.recur_days or '',
+            'recur_end': self.recur_end or '',
         }
 
 
@@ -73,6 +83,7 @@ class Note(db.Model):
     title      = db.Column(db.Text, nullable=True)
     content    = db.Column(db.Text, nullable=False)   # stores HTML with embedded base64 images
     color      = db.Column(db.String(20), nullable=False, default='default')
+    font_color = db.Column(db.String(20), nullable=True)   # css color value for card text
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def to_dict(self):
@@ -80,6 +91,7 @@ class Note(db.Model):
             'id': self.id, 'date': self.date,
             'title': self.title or '',
             'content': self.content, 'color': self.color,
+            'font_color': self.font_color or '',
         }
 
 

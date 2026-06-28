@@ -109,7 +109,7 @@
 .dl-row-countdown.ok{color:var(--success)}
 
 /* Note mini cards */
-.today-note-card{padding:9px 10px;border-radius:var(--r8);border:1px solid var(--border);cursor:pointer;transition:all .15s;font-size:11px;line-height:1.5;max-height:72px;overflow:hidden;position:relative;animation:rowIn .18s var(--ease-out)}
+.today-note-card{padding:9px 10px;border-radius:var(--r8);border:1px solid var(--border);cursor:pointer;transition:all .15s;font-size:11px;line-height:1.5;overflow:hidden;position:relative;animation:rowIn .18s var(--ease-out)}
 .today-note-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--border-strong)}
 .today-note-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:20px;background:linear-gradient(transparent,inherit);pointer-events:none}
 .today-note-card.nc-default{background:var(--bg-elevated)}
@@ -118,6 +118,7 @@
 .today-note-card.nc-blue{background:rgba(96,165,250,.07);border-color:rgba(96,165,250,.18)}
 .today-note-card.nc-pink{background:rgba(244,114,182,.07);border-color:rgba(244,114,182,.18)}
 .note-mini-title{font-size:10px;font-weight:700;color:var(--tx2);margin-bottom:3px;letter-spacing:.2px}
+.nc-thumb-mini{width:100%;height:44px;object-fit:cover;border-radius:4px;margin:2px 0 3px;flex-shrink:0;display:block}
 
 /* mini-cal moved to widget.css */
 

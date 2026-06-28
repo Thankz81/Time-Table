@@ -258,8 +258,12 @@ window.TodayView = (() => {
     notes.forEach(n => {
       const div = document.createElement('div');
       div.className = `today-note-card nc-${n.color}`;
-      const preview = _strip(n.content);
-      div.innerHTML = `${n.title ? `<div class="note-mini-title">${_e(n.title)}</div>` : ''}${_e(preview)}`;
+      const preview = _strip(n.content).slice(0, 100);
+      const thumb = _firstImage(n.content);
+      div.innerHTML = `
+        ${n.title ? `<div class="note-mini-title">${_e(n.title)}</div>` : ''}
+        ${thumb ? `<img class="nc-thumb-mini" src="${thumb}" alt="">` : ''}
+        ${_e(preview)}`;
       div.onclick = () => NoteEditor.open(n, () => _loadData(today));
       el.appendChild(div);
     });
@@ -278,6 +282,7 @@ window.TodayView = (() => {
 
   function _e(s) { if (!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function _strip(s) { const d = document.createElement('div'); d.innerHTML = s || ''; return d.textContent || ''; }
+  function _firstImage(s) { const d = document.createElement('div'); d.innerHTML = s || ''; const img = d.querySelector('img'); return img ? img.src : null; }
 
   return { render };
 })();
