@@ -1,0 +1,325 @@
+/* timeline.css — day panel timeline */
+
+/* ── Panel body scrolls ── */
+#panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 20px;
+}
+
+/* ── Add-item bar ── */
+.tl-add-bar {
+  display: flex;
+  gap: 6px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-elevated);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.tl-add-btn {
+  padding: 5px 12px;
+  border-radius: var(--r50);
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--tx3);
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.tl-add-btn:hover { background: var(--bg-hover); color: var(--tx); border-color: var(--border-strong); }
+.tl-add-task:hover { border-color: var(--task-c); color: var(--task-c); }
+.tl-add-dl:hover   { border-color: var(--dl-c);   color: var(--dl-c); }
+.tl-add-note:hover { border-color: var(--note-c); color: var(--note-c); }
+
+/* ── All-day row ── */
+.tl-allday {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 14px;
+  border-bottom: 2px solid var(--border);
+  background: var(--bg-elevated);
+  min-height: 42px;
+}
+.tl-allday-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .4px;
+  text-transform: uppercase;
+  color: var(--tx3);
+  width: 42px;
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+.tl-allday-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  flex: 1;
+}
+
+/* ── Timeline grid ── */
+.tl-grid {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Each hour row ── */
+.tl-row {
+  display: flex;
+  align-items: stretch;
+  min-height: 52px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.tl-row:hover { background: rgba(124,106,247,.03); }
+.tl-row-now { background: rgba(124,106,247,.05); }
+
+/* Hour label */
+.tl-hour-lbl {
+  width: 42px;
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--tx3);
+  padding: 6px 6px 0 12px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.2px;
+}
+.tl-row-now .tl-hour-lbl { color: var(--accent); font-weight: 700; }
+
+/* Slot area */
+.tl-slot {
+  flex: 1;
+  position: relative;
+  padding: 4px 10px 4px 8px;
+  border-left: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+}
+
+/* Now line + dot */
+.tl-now-line {
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  background: var(--accent);
+  opacity: .7;
+  pointer-events: none;
+  z-index: 2;
+}
+.tl-now-dot {
+  position: absolute;
+  left: -5px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  z-index: 3;
+  transform: translateY(-4px);
+  box-shadow: 0 0 0 3px rgba(124,106,247,.25);
+}
+
+/* Items wrapper — multi stacks side-by-side */
+.tl-items {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+}
+.tl-items.multi {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 3px;
+}
+
+/* ── Chips ── */
+.tl-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  border-radius: var(--r6);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  cursor: pointer;
+  transition: all .12s;
+  min-width: 0;
+  animation: rowIn .15s var(--ease-out);
+  position: relative;
+}
+.tl-chip:hover { border-color: var(--border-strong); background: var(--bg-hover); transform: translateX(2px); }
+
+/* Task chip */
+.tl-chip-task { border-left: 3px solid var(--task-c); }
+.tl-chip-task.priority-high   { border-left-color: var(--dl-c); }
+.tl-chip-task.priority-low    { border-left-color: var(--border); }
+.tl-chip-task.done            { opacity: .55; }
+.tl-chip-task.tc-yellow       { background: rgba(245,158,11,.09); border-color: rgba(245,158,11,.25); }
+.tl-chip-task.tc-green        { background: rgba(62,207,142,.09); border-color: rgba(62,207,142,.25); }
+.tl-chip-task.tc-blue         { background: rgba(96,165,250,.09); border-color: rgba(96,165,250,.25); }
+.tl-chip-task.tc-pink         { background: rgba(244,114,182,.09); border-color: rgba(244,114,182,.25); }
+.tl-chip-task.tc-purple       { background: rgba(167,139,250,.09); border-color: rgba(167,139,250,.25); }
+
+/* Deadline chip */
+.tl-chip-dl { border-left: 3px solid var(--dl-c); background: var(--danger-dim); }
+.tl-chip-dl.urgent { background: rgba(248,113,113,.18); animation: urgBlink 2s ease-in-out infinite; }
+
+/* Note chip */
+.tl-chip-note { border-left: 3px solid var(--note-c); }
+.tl-chip-note.nc-yellow { background: rgba(245,158,11,.09); border-left-color: #f59e0b; }
+.tl-chip-note.nc-green  { background: rgba(62,207,142,.09); border-left-color: #3ecf8e; }
+.tl-chip-note.nc-blue   { background: rgba(96,165,250,.09); border-left-color: #60a5fa; }
+.tl-chip-note.nc-pink   { background: rgba(244,114,182,.09); border-left-color: #f472b6; }
+
+/* Check circle */
+.tlc-check {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid var(--tx3);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all .15s;
+  cursor: pointer;
+}
+.tlc-check:hover { border-color: var(--success); background: var(--success-dim); }
+.tlc-check.done  { background: var(--success); border-color: var(--success); }
+.tlc-check.done::after { content: '✓'; color: #fff; font-size: 9px; font-weight: 800; }
+
+/* DL / Note icons */
+.tlc-dl-icon   { font-size: 12px; color: var(--dl-c); flex-shrink: 0; }
+.tlc-note-icon { font-size: 12px; color: var(--note-c); flex-shrink: 0; }
+
+/* Chip body */
+.tlc-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+.tlc-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--tx);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+.tl-chip-task.done .tlc-title { text-decoration: line-through; color: var(--tx3); }
+.tlc-time {
+  font-size: 10px;
+  color: var(--accent);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+.tlc-badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: var(--bg-hover);
+  color: var(--tx3);
+  text-transform: uppercase;
+  letter-spacing: .3px;
+  flex-shrink: 0;
+}
+.tlc-badge.urgent { background: var(--danger-dim); color: var(--dl-c); }
+.tlc-recur { font-size: 10px; color: var(--accent); opacity: .7; flex-shrink: 0; }
+
+/* Chip actions — visible on hover */
+.tlc-actions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity .12s;
+}
+.tl-chip:hover .tlc-actions { opacity: 1; }
+.tlc-btn {
+  width: 22px; height: 22px;
+  border-radius: var(--r4);
+  background: none;
+  color: var(--tx3);
+  font-size: 11px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .1s;
+  flex-shrink: 0;
+}
+.tlc-btn:hover { background: var(--bg-active); color: var(--tx); }
+.tlc-btn.del:hover { background: var(--danger-dim); color: var(--dl-c); }
+
+/* Mobile: always show actions */
+@media (max-width: 640px) {
+  .tlc-actions { opacity: 1; }
+  .tlc-btn { width: 28px; height: 28px; }
+}
+
+/* ── Quick-add deadline ── */
+.tl-quick-add {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  animation: paneIn .18s var(--ease-out);
+}
+.tl-qa-input {
+  flex: 1;
+  min-width: 120px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r6);
+  padding: 5px 9px;
+  color: var(--tx);
+  font-size: 12px;
+  outline: none;
+}
+.tl-qa-input:focus { border-color: var(--accent); }
+.tl-qa-time {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r6);
+  padding: 5px 7px;
+  color: var(--tx);
+  font-size: 12px;
+  outline: none;
+  cursor: pointer;
+}
+.tl-qa-urgent {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--tx3);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.tl-qa-urgent input { accent-color: var(--dl-c); }
+.tl-qa-save {
+  padding: 5px 12px;
+  border-radius: var(--r6);
+  background: var(--dl-c);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  transition: opacity .12s;
+  flex-shrink: 0;
+}
+.tl-qa-save:hover { opacity: .85; }
+.tl-qa-cancel {
+  padding: 5px 8px;
+  border-radius: var(--r6);
+  color: var(--tx3);
+  font-size: 12px;
+  transition: all .12s;
+  flex-shrink: 0;
+}
+.tl-qa-cancel:hover { background: var(--bg-hover); color: var(--tx2); }

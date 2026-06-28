@@ -1,4 +1,4 @@
-const CACHE = 'tyme-tyble-v1';
+const CACHE = 'tyme-tyble-v3';
 const PRECACHE = [
   '/',
   '/static/css/base.css',
@@ -11,6 +11,7 @@ const PRECACHE = [
   '/static/css/deadlines.css',
   '/static/css/calendar.css',
   '/static/css/widget.css',
+  '/static/css/timeline.css',
   '/static/js/api.js',
   '/static/js/auth.js',
   '/static/js/store.js',

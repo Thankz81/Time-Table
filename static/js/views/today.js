@@ -189,9 +189,11 @@ window.TodayView = (() => {
     el.innerHTML = '';
     sorted.forEach(t => {
       const div = document.createElement('div');
-      div.className = `trow priority-${t.priority}`;
+      div.className = `trow priority-${t.priority}${t.bg_color ? ' tc-'+t.bg_color : ''}`;
+      if (t.font_color) div.style.color = t.font_color;
       const isDone = t.status === 'done';
       const hasDesc = t.description && t.description.replace(/<[^>]*>/g,'').trim();
+      const recurBadge = t.recur_id ? `<span style="font-size:10px;opacity:.7" title="Recurring">↻</span>` : '';
       div.innerHTML = `
         <div class="trow-check${isDone ? ' done' : ''}" title="${isDone ? 'Mark undone' : 'Mark done'}"></div>
         <div class="trow-body">
@@ -200,6 +202,7 @@ window.TodayView = (() => {
             <span class="trow-badge tb-${t.status === 'in-progress' ? 'inprog' : t.status}">${t.status}</span>
             <span class="trow-badge tb-${t.priority}">${t.priority}</span>
             ${hasDesc ? '<span class="trow-desc">📝 has notes</span>' : ''}
+          ${recurBadge}
           </div>
         </div>
         <button class="trow-edit" title="Edit">✎</button>`;

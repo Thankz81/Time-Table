@@ -24,11 +24,12 @@ def create():
     if not data.get('date') or not data.get('content'):
         return jsonify({'error': 'date and content are required'}), 400
     note = Note(
-        user_id=current_user_id(),
-        date=data['date'],
-        title=data.get('title', ''),
-        content=data['content'],
-        color=data.get('color', 'default'),
+        user_id    = current_user_id(),
+        date       = data['date'],
+        title      = data.get('title', ''),
+        content    = data['content'],
+        color      = data.get('color', 'default'),
+        font_color = data.get('font_color', '') or None,
     )
     db.session.add(note)
     db.session.commit()
@@ -40,9 +41,10 @@ def create():
 def update(note_id):
     note = Note.query.filter_by(id=note_id, user_id=current_user_id()).first_or_404()
     data = request.get_json() or {}
-    if 'title'   in data: note.title   = data['title']
-    if 'content' in data: note.content = data['content']
-    if 'color'   in data: note.color   = data['color']
+    if 'title'      in data: note.title      = data['title']
+    if 'content'    in data: note.content    = data['content']
+    if 'color'      in data: note.color      = data['color']
+    if 'font_color' in data: note.font_color = data['font_color'] or None
     db.session.commit()
     return jsonify(note.to_dict())
 

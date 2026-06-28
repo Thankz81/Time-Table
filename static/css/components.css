@@ -85,7 +85,31 @@
 .color-picker{display:flex;gap:5px;align-items:center}
 .cp-dot{width:16px;height:16px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s var(--ease-spring)}
 .cp-dot:hover,.cp-dot.active{transform:scale(1.2);border-color:var(--border-strong)}
+.cp-dot.active{box-shadow:0 0 0 2px var(--accent)}
 .cp-default{background:#9090a8}.cp-yellow{background:#f59e0b}.cp-green{background:#3ecf8e}.cp-blue{background:#60a5fa}.cp-pink{background:#f472b6}
+.cp-none{display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--tx3)}
+
+
+/* ── Extra rows (color + recurrence) ── */
+.tem-extra-row{display:flex;align-items:center;gap:10px;padding:8px 18px;border-bottom:1px solid var(--border);background:var(--bg-elevated);flex-wrap:wrap;flex-shrink:0}
+.tem-recur-label{font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--tx3);flex-shrink:0;white-space:nowrap}
+/* Recurring toggle */
+.recur-toggle-label{display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12px;font-weight:600;color:var(--tx2);user-select:none}
+.recur-toggle-label input[type=checkbox]{width:15px;height:15px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+/* Expanded weekday section */
+.recur-expand{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:0}
+.recur-expand.hidden{display:none}
+.recur-days{display:flex;gap:4px;flex-wrap:wrap}
+.recur-day-btn{padding:4px 9px;border-radius:var(--r6);border:1px solid var(--border);background:var(--bg);color:var(--tx3);font-size:12px;font-weight:600;cursor:pointer;transition:all .12s;user-select:none}
+.recur-day-btn:hover{border-color:var(--accent-border);color:var(--accent);background:var(--accent-dim)}
+.recur-day-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.tem-recur-hint{font-size:11px;color:var(--accent);font-style:italic;margin-left:4px}
+/* "None" dot for task color picker */
+.cp-none{background:var(--bg-elevated) !important;border:1px solid var(--border-strong) !important;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--tx3);line-height:1}
+.cp-none.active{box-shadow:0 0 0 2px var(--accent)}
+
+/* Note editor header pickers label */
+.nem-picker-label{font-size:9px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--tx3);flex-shrink:0}
 
 /* ── Modals ── */
 .modal-backdrop{position:fixed;inset:0;z-index:150;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);padding:20px}
@@ -111,10 +135,12 @@
 
 /* ── Task Editor Modal ── */
 .task-editor-modal,.note-editor-modal{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--r16);width:100%;max-width:660px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;animation:cardIn .25s var(--ease-out);box-shadow:var(--shadow-lg)}
+/* Scrollable middle section */
+.tem-scroll{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-height:0}
 .tem-topbar{display:flex;align-items:center;gap:8px;padding:10px 18px;background:var(--bg-elevated);border-bottom:1px solid var(--border);flex-shrink:0}
 .tem-topbar-icon{width:22px;height:22px;border-radius:5px;background:var(--accent-dim);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;border:1px solid var(--accent-border)}
 .tem-topbar-title{font-size:13px;font-weight:600;color:var(--tx2)}
-.tem-header,.nem-header{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--border);flex-shrink:0}
+.tem-header,.nem-header{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap}
 .tem-title-input,.nem-title-input{flex:1;background:none;border:none;color:var(--tx);font-size:17px;font-weight:600;outline:none}
 .tem-title-input::placeholder,.nem-title-input::placeholder{color:var(--tx3)}
 .tem-close{color:var(--tx3);font-size:14px;padding:4px 7px;border-radius:var(--r6);transition:all .15s;flex-shrink:0}
@@ -130,6 +156,9 @@
 .rte-btn{padding:4px 8px;border-radius:var(--r4);background:none;color:var(--tx3);font-size:12px;transition:all .12s;border:1px solid transparent;line-height:1}
 .rte-btn:hover{background:var(--bg-hover);color:var(--tx);border-color:var(--border)}
 .rte-btn.active{background:var(--accent-dim);color:var(--accent);border-color:var(--accent-border)}
+/* Image insert button — show mini image preview icon on hover */
+#rte-img-btn,#nem-img-btn{position:relative;overflow:hidden}
+#rte-img-btn:hover,#nem-img-btn:hover{background:var(--accent-dim);border-color:var(--accent-border);color:var(--accent)}
 .rte-sep{width:1px;height:18px;background:var(--border);margin:0 3px;flex-shrink:0}
 .rte-color-sel{padding:3px 5px;border-radius:var(--r4);background:var(--bg-elevated);border:1px solid var(--border);color:var(--tx2);cursor:pointer;font-size:11px}
 .rte-color-sel option{background:var(--bg-surface)}
@@ -165,6 +194,7 @@
 @media(max-width:640px){
   /* task/note editor: full screen on mobile */
   .task-editor-modal,.note-editor-modal{max-width:100%;max-height:100vh;border-radius:0;height:100dvh}
+  .recur-expand{flex-direction:column;align-items:flex-start;gap:6px}
   .modal-backdrop{padding:0;align-items:flex-end}
   .modal-card{max-width:100%;border-radius:var(--r16) var(--r16) 0 0;max-height:90dvh;overflow-y:auto}
   /* bigger touch targets for action buttons */

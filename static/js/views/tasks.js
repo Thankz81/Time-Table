@@ -105,9 +105,11 @@ window.TasksView = (() => {
 
   function _taskRow(t) {
     const div = document.createElement('div');
-    div.className = `task-row priority-${t.priority}`;
+    div.className = `task-row priority-${t.priority}${t.bg_color ? ' tc-'+t.bg_color : ''}`;
+    if (t.font_color) div.style.color = t.font_color;
     const isDone = t.status === 'done';
     const thumb = _firstImage(t.description);
+    const recurBadge = t.recur_id ? `<span class="tr-badge tr-recur" title="Recurring">↻</span>` : '';
     div.innerHTML = `
       <div class="tr-check${isDone ? ' done' : ''}"></div>
       <div class="tr-body">
@@ -115,6 +117,7 @@ window.TasksView = (() => {
         <div class="tr-meta">
           <span class="tr-badge tb-${t.priority}" style="background:${t.priority==='high'?'var(--danger-dim)':t.priority==='low'?'rgba(144,144,168,.05)':'rgba(144,144,168,.08)'};color:${t.priority==='high'?'var(--dl-c)':'var(--tx3)'}">${t.priority}</span>
           <span class="tr-date">${t.date}</span>
+          ${recurBadge}
         </div>
       </div>
       ${thumb ? `<img class="tr-thumb" src="${thumb}" alt="">` : ''}

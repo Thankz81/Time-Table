@@ -28,7 +28,7 @@ window.API = (() => {
     createTask: b => post('/api/tasks', b),
     updateTask: (id, b) => put(`/api/tasks/${id}`, b),
     patchTaskStatus: (id, status) => patch(`/api/tasks/${id}/status`, { status }),
-    deleteTask: id => del(`/api/tasks/${id}`),
+    deleteTask: (id, scope) => del(`/api/tasks/${id}` + (scope === 'all' ? '?scope=all' : '')),
     getNotes: (date) => get('/api/notes' + (date ? `?date=${date}` : '')),
     createNote: b => post('/api/notes', b),
     updateNote: (id, b) => put(`/api/notes/${id}`, b),

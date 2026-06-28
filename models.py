@@ -55,11 +55,12 @@ class Task(db.Model):
     description = db.Column(db.Text, nullable=True)   # rich HTML content
     status      = db.Column(db.String(20), nullable=False, default='todo')
     priority    = db.Column(db.String(10), nullable=False, default='normal')
+    time        = db.Column(db.String(5),  nullable=True)   # HH:MM due time
     bg_color    = db.Column(db.String(20), nullable=True)   # e.g. 'yellow','green','blue','pink'
     font_color  = db.Column(db.String(20), nullable=True)   # css color value
-    recur_id    = db.Column(db.Integer, nullable=True, index=True)  # shared id linking recurring siblings
-    recur_days  = db.Column(db.String(20), nullable=True)  # comma-sep weekday nums: '0,2,4' = Mon,Wed,Fri
-    recur_end   = db.Column(db.String(10), nullable=True)  # YYYY-MM-DD end date (inclusive)
+    recur_id    = db.Column(db.Integer, nullable=True, index=True)
+    recur_days  = db.Column(db.String(20), nullable=True)
+    recur_end   = db.Column(db.String(10), nullable=True)
     created_at  = db.Column(db.DateTime, default=datetime.utcnow)
 
     def to_dict(self):
@@ -67,6 +68,7 @@ class Task(db.Model):
             'id': self.id, 'date': self.date,
             'title': self.title, 'description': self.description or '',
             'status': self.status, 'priority': self.priority,
+            'time': self.time or '',
             'bg_color': self.bg_color or '',
             'font_color': self.font_color or '',
             'recur_id': self.recur_id,

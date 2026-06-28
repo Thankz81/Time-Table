@@ -14,10 +14,13 @@ window.Toast = (() => {
 
 /* ── Task Editor ────────────────────────────────────────────── */
 window.TaskEditor = (() => {
-  let _task=null, _onSave=null;
+  let _task=null, _onSave=null, _bgColor='', _recurDays=new Set();
 
   function open(task, onSave) {
     _task=task; _onSave=onSave;
+    _bgColor = task ? (task.bg_color||'') : '';
+    _recurDays = new Set();
+
     const backdrop=document.getElementById('task-editor-backdrop');
     const titleEl =document.getElementById('tem-title');
     const statusEl=document.getElementById('tem-status');
@@ -30,6 +33,34 @@ window.TaskEditor = (() => {
     priEl.value    = task ? task.priority : 'normal';
     dateEl.value   = task ? task.date     : Store.todayStr();
     Editor.setHTML(descEl, task ? task.description : '');
+
+    // Time
+    const timeEl = document.getElementById('tem-time');
+    if (timeEl) timeEl.value = task ? (task.time||'') : '';
+    // Font color select
+    const fcSel = document.getElementById('tem-font-color');
+    if (fcSel) fcSel.value = task ? (task.font_color||'') : '';
+
+    // BG color picker
+    document.querySelectorAll('#tem-colors .cp-dot').forEach(d=>{
+      d.classList.toggle('active', d.dataset.color === _bgColor);
+    });
+
+    // Recurring toggle + weekdays
+    const toggle = document.getElementById('tem-recur-toggle');
+    const expand = document.getElementById('tem-recur-expand');
+    const recurEnd = document.getElementById('tem-recur-end');
+    const hasRecur = task && task.recur_days;
+    if (toggle) toggle.checked = !!hasRecur;
+    if (expand) expand.classList.toggle('hidden', !hasRecur);
+    if (hasRecur) {
+      task.recur_days.split(',').filter(Boolean).forEach(d => _recurDays.add(d));
+      if (recurEnd) recurEnd.value = task.recur_end || '';
+    } else {
+      if (recurEnd) recurEnd.value = '';
+    }
+    _syncRecurBtns();
+    _updateRecurHint();
 
     // Update modal header label
     const saveBtn = document.getElementById('tem-save');
@@ -51,6 +82,25 @@ window.TaskEditor = (() => {
     deleteBtn.style.display = task ? '' : 'none';
   }
 
+  function _syncRecurBtns() {
+    document.querySelectorAll('#tem-recur-days .recur-day-btn').forEach(b=>{
+      b.classList.toggle('active', _recurDays.has(b.dataset.day));
+    });
+  }
+
+  function _updateRecurHint() {
+    const hint = document.getElementById('tem-recur-hint');
+    if (!hint) return;
+    const end = document.getElementById('tem-recur-end');
+    if (_recurDays.size === 0 || !end || !end.value) {
+      hint.textContent = '';
+      return;
+    }
+    const dayNames = {'0':'Mon','1':'Tue','2':'Wed','3':'Thu','4':'Fri','5':'Sat','6':'Sun'};
+    const days = [..._recurDays].sort().map(d=>dayNames[d]||d).join(', ');
+    hint.textContent = `Repeats every ${days} until ${end.value}`;
+  }
+
   function _close() {
     document.getElementById('task-editor-backdrop').classList.add('hidden');
     _task=null;
@@ -58,21 +108,83 @@ window.TaskEditor = (() => {
 
   function _init() {
     document.getElementById('tem-close').onclick  = _close;
-    document.getElementById('task-editor-backdrop').onclick = e => { if(e.target===document.getElementById('task-editor-backdrop')) _close(); };
+    document.getElementById('task-editor-backdrop').onclick = e => {
+      if(e.target===document.getElementById('task-editor-backdrop')) _close();
+    };
+
+    // BG color picker
+    document.querySelectorAll('#tem-colors .cp-dot').forEach(dot=>{
+      dot.addEventListener('click', ()=>{
+        _bgColor = dot.dataset.color;
+        document.querySelectorAll('#tem-colors .cp-dot').forEach(d=>d.classList.remove('active'));
+        dot.classList.add('active');
+      });
+    });
+
+    // Recurring checkbox shows/hides weekday section
+    document.getElementById('tem-recur-toggle').addEventListener('change', function() {
+      const expand = document.getElementById('tem-recur-expand');
+      expand.classList.toggle('hidden', !this.checked);
+      if (!this.checked) {
+        _recurDays.clear();
+        _syncRecurBtns();
+        const re = document.getElementById('tem-recur-end');
+        if (re) re.value = '';
+        _updateRecurHint();
+      }
+    });
+
+    // Recurrence day toggles
+    document.querySelectorAll('#tem-recur-days .recur-day-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const d = btn.dataset.day;
+        if (_recurDays.has(d)) _recurDays.delete(d); else _recurDays.add(d);
+        btn.classList.toggle('active', _recurDays.has(d));
+        _updateRecurHint();
+      });
+    });
+    const recurEndEl = document.getElementById('tem-recur-end');
+    if (recurEndEl) recurEndEl.addEventListener('change', _updateRecurHint);
 
     document.getElementById('tem-save').onclick = async () => {
-      const title  = document.getElementById('tem-title').value.trim();
-      const status = document.getElementById('tem-status').value;
-      const pri    = document.getElementById('tem-priority').value;
-      const date   = document.getElementById('tem-date').value;
-      const desc   = Editor.getHTML(document.getElementById('tem-description'));
+      const title    = document.getElementById('tem-title').value.trim();
+      const status   = document.getElementById('tem-status').value;
+      const pri      = document.getElementById('tem-priority').value;
+      const date     = document.getElementById('tem-date').value;
+      const desc     = Editor.getHTML(document.getElementById('tem-description'));
+      const taskTime  = (document.getElementById('tem-time')||{}).value || '';
+      const fontColor = (document.getElementById('tem-font-color')||{}).value || '';
+      const recurToggle = document.getElementById('tem-recur-toggle');
+      const isRecur = recurToggle && recurToggle.checked;
+      const recurEnd = isRecur ? ((document.getElementById('tem-recur-end')||{}).value || '') : '';
+      const recurDaysStr = isRecur ? [..._recurDays].sort().join(',') : '';
+
       if (!title||!date) { Toast.show('Title and date required','error'); return; }
+
+      const payload = {
+        title, status, priority:pri, date, description:desc,
+        time: taskTime,
+        bg_color: _bgColor || '',
+        font_color: fontColor,
+      };
+
+      // Only include recur fields when the toggle is checked (creating/updating recurrence)
+      // or when explicitly clearing recurrence on an existing recurring task
+      if (isRecur) {
+        payload.recur_days = recurDaysStr;
+        payload.recur_end  = recurEnd;
+      } else if (_task && _task.recur_id) {
+        // User unchecked recurring on an existing recurring task — clear it
+        payload.recur_days = '';
+        payload.recur_end  = '';
+      }
+
       try {
         if (_task) {
-          await API.updateTask(_task.id,{title,status,priority:pri,date,description:desc});
+          await API.updateTask(_task.id, payload);
           Toast.show('Task saved ✓','success');
         } else {
-          await API.createTask({title,status,priority:pri,date,description:desc});
+          await API.createTask(payload);
           Toast.show('Task created ✓','success');
         }
         _close();
@@ -82,8 +194,18 @@ window.TaskEditor = (() => {
 
     document.getElementById('tem-delete').onclick = async () => {
       if (!_task) return;
-      try { await API.deleteTask(_task.id); Toast.show('Task deleted'); _close(); if(_onSave)_onSave(); }
-      catch(e){ Toast.show(e.message,'error'); }
+      // If recurring, ask scope
+      if (_task.recur_id) {
+        const choice = confirm('Delete just this occurrence, or all recurring instances?\n\nOK = delete ALL\nCancel = delete only this one');
+        try {
+          await API.deleteTask(_task.id, choice ? 'all' : 'one');
+          Toast.show('Task deleted');
+          _close(); if(_onSave)_onSave();
+        } catch(e){ Toast.show(e.message,'error'); }
+      } else {
+        try { await API.deleteTask(_task.id); Toast.show('Task deleted'); _close(); if(_onSave)_onSave(); }
+        catch(e){ Toast.show(e.message,'error'); }
+      }
     };
   }
 
@@ -92,17 +214,25 @@ window.TaskEditor = (() => {
 
 /* ── Note Editor ────────────────────────────────────────────── */
 window.NoteEditor = (() => {
-  let _note=null, _onSave=null, _color='default';
+  let _note=null, _onSave=null, _color='default', _fontColor='';
 
   function open(note, onSave) {
-    _note=note; _onSave=onSave; _color=note?note.color:'default';
+    _note=note; _onSave=onSave;
+    _color     = note ? (note.color||'default')     : 'default';
+    _fontColor = note ? (note.font_color||'') : '';
+
     const backdrop = document.getElementById('note-editor-backdrop');
-    document.getElementById('nem-title').value = note ? note.title   : '';
+    document.getElementById('nem-title').value = note ? note.title : '';
     Editor.setHTML(document.getElementById('nem-content'), note ? note.content : '');
 
-    // Reset color picker
+    // BG color picker
     document.querySelectorAll('#nem-colors .cp-dot').forEach(d=>{
       d.classList.toggle('active', d.dataset.color===_color);
+    });
+
+    // Font color picker
+    document.querySelectorAll('#nem-font-colors .nem-fc').forEach(d=>{
+      d.classList.toggle('active', (d.dataset.fc||'')=== _fontColor);
     });
 
     backdrop.classList.remove('hidden');
@@ -124,12 +254,23 @@ window.NoteEditor = (() => {
 
   function _init() {
     document.getElementById('nem-close').onclick = _close;
-    document.getElementById('note-editor-backdrop').onclick = e => { if(e.target===document.getElementById('note-editor-backdrop')) _close(); };
+    document.getElementById('note-editor-backdrop').onclick = e => {
+      if(e.target===document.getElementById('note-editor-backdrop')) _close();
+    };
 
+    // BG color picker
     document.querySelectorAll('#nem-colors .cp-dot').forEach(dot=>{
       dot.addEventListener('click', ()=>{
         document.querySelectorAll('#nem-colors .cp-dot').forEach(d=>d.classList.remove('active'));
         dot.classList.add('active'); _color=dot.dataset.color;
+      });
+    });
+
+    // Font color picker
+    document.querySelectorAll('#nem-font-colors .nem-fc').forEach(dot=>{
+      dot.addEventListener('click', ()=>{
+        document.querySelectorAll('#nem-font-colors .nem-fc').forEach(d=>d.classList.remove('active'));
+        dot.classList.add('active'); _fontColor = dot.dataset.fc || '';
       });
     });
 
@@ -140,10 +281,10 @@ window.NoteEditor = (() => {
       if (!content) { Toast.show('Content cannot be empty','error'); return; }
       try {
         if (_note) {
-          await API.updateNote(_note.id,{title,content,color:_color});
+          await API.updateNote(_note.id,{title,content,color:_color,font_color:_fontColor});
           Toast.show('Note saved ✓','success');
         } else {
-          await API.createNote({title,content,color:_color,date});
+          await API.createNote({title,content,color:_color,font_color:_fontColor,date});
           Toast.show('Note created ✓','success');
         }
         _close();
@@ -370,8 +511,7 @@ function bootApp(user) {
     Panel.open(date, () => { MiniCalendar.refresh(); if (Router.current() === 'today') TodayView.render(); });
   });
 
-  // Wire panel forms
-  wirePanelForms();
+  // Panel forms are now rendered dynamically inside the timeline — no static wiring needed
 
   // Keyboard shortcuts
   document.addEventListener('keydown', e => {

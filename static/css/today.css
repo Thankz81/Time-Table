@@ -55,6 +55,11 @@
 .trow.priority-high{border-left-color:var(--dl-c)}
 .trow.priority-normal{border-left-color:var(--border-strong)}
 .trow.priority-low{border-left-color:transparent}
+.trow.tc-yellow{background:rgba(245,158,11,.09)}
+.trow.tc-green{background:rgba(62,207,142,.09)}
+.trow.tc-blue{background:rgba(96,165,250,.09)}
+.trow.tc-pink{background:rgba(244,114,182,.09)}
+.trow.tc-purple{background:rgba(167,139,250,.09)}
 .trow-check{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--tx3);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s var(--ease-spring);cursor:pointer}
 .trow-check:hover{border-color:var(--success);background:var(--success-dim)}
 .trow-check.done{background:var(--success);border-color:var(--success)}

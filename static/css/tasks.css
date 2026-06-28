@@ -72,6 +72,14 @@
 .tr-act{width:24px;height:24px;border-radius:var(--r4);color:var(--tx3);font-size:11px;display:flex;align-items:center;justify-content:center;transition:all .12s}
 .tr-act:hover{background:var(--bg-active);color:var(--tx)}
 .tr-act.del:hover{background:var(--danger-dim);color:var(--dl-c)}
+/* Task card background color variants */
+.task-row.tc-yellow{background:rgba(245,158,11,.09);border-color:rgba(245,158,11,.22)}
+.task-row.tc-green{background:rgba(62,207,142,.09);border-color:rgba(62,207,142,.22)}
+.task-row.tc-blue{background:rgba(96,165,250,.09);border-color:rgba(96,165,250,.22)}
+.task-row.tc-pink{background:rgba(244,114,182,.09);border-color:rgba(244,114,182,.22)}
+.task-row.tc-purple{background:rgba(167,139,250,.09);border-color:rgba(167,139,250,.22)}
+/* Recurrence badge */
+.tr-recur{background:var(--accent-dim);color:var(--accent);border-radius:3px;padding:1px 4px;font-size:11px;font-weight:700}
 
 /* Inline quick-add row */
 .tasks-inline-add{display:flex;align-items:center;gap:8px;padding:8px 8px;border-radius:var(--r6);border:1px dashed var(--border);margin:6px 0;animation:paneIn .15s var(--ease-out)}
@@ -100,10 +108,10 @@
 .note-card{border:1px solid var(--border);border-radius:var(--r12);padding:12px;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;gap:5px;min-height:110px;position:relative;overflow:hidden;animation:rowIn .18s var(--ease-out)}
 .note-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--border-strong)}
 .note-card.nc-default{background:var(--bg-elevated)}
-.note-card.nc-yellow{background:rgba(245,158,11,.07);border-color:rgba(245,158,11,.18)}
-.note-card.nc-green{background:rgba(62,207,142,.07);border-color:rgba(62,207,142,.18)}
-.note-card.nc-blue{background:rgba(96,165,250,.07);border-color:rgba(96,165,250,.18)}
-.note-card.nc-pink{background:rgba(244,114,182,.07);border-color:rgba(244,114,182,.18)}
+.note-card.nc-yellow{background:#3a2800;border-color:rgba(245,158,11,.35)}
+.note-card.nc-green{background:#003320;border-color:rgba(62,207,142,.35)}
+.note-card.nc-blue{background:#001e3a;border-color:rgba(96,165,250,.35)}
+.note-card.nc-pink{background:#3a0020;border-color:rgba(244,114,182,.35)}
 .nc-title{font-size:12px;font-weight:600;color:var(--tx2)}
 .nc-thumb{width:100%;height:72px;object-fit:cover;border-radius:var(--r6);margin:2px 0 4px;flex-shrink:0}
 .nc-preview{font-size:12px;color:var(--tx3);line-height:1.5;flex:1;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}

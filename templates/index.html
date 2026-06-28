@@ -40,6 +40,7 @@
   <link rel="stylesheet" href="/static/css/deadlines.css">
   <link rel="stylesheet" href="/static/css/calendar.css">
   <link rel="stylesheet" href="/static/css/widget.css">
+  <link rel="stylesheet" href="/static/css/timeline.css">
 </head>
 <body>
 
@@ -272,135 +273,127 @@
         <div class="prog-meta"><span id="prog-label">0/0 tasks</span><span id="prog-pct">0%</span></div>
         <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
       </div>
-      <div id="today-strip" class="hidden">
-        <div class="tstrip-item"><span class="tstrip-n" id="ts-todo">0</span><span class="tstrip-l">To Do</span></div>
-        <div class="tstrip-sep"></div>
-        <div class="tstrip-item"><span class="tstrip-n" id="ts-prog">0</span><span class="tstrip-l">In Progress</span></div>
-        <div class="tstrip-sep"></div>
-        <div class="tstrip-item"><span class="tstrip-n" id="ts-done">0</span><span class="tstrip-l">Done</span></div>
-      </div>
-      <div id="panel-body">
-        <div class="psec" id="psec-tasks">
-          <div class="psec-head task-head">
-            <div class="psec-title"><span class="psec-icon ti">✓</span>Tasks</div>
-            <button class="padd-btn" data-sec="task">＋</button>
-          </div>
-          <ul class="plist" id="panel-task-list"></ul>
-          <form class="padd-form hidden" id="panel-task-form">
-            <input type="text" id="panel-task-input" class="pf-input" placeholder="Task title…" autocomplete="off">
-            <div class="pf-row">
-              <select id="panel-task-status" class="pf-select">
-                <option value="todo">To Do</option>
-                <option value="in-progress">In Progress</option>
-                <option value="done">Done</option>
-              </select>
-              <select id="panel-task-priority" class="pf-select">
-                <option value="low">Low</option>
-                <option value="normal" selected>Normal</option>
-                <option value="high">High</option>
-              </select>
-              <button type="submit" class="pf-submit ts">Add</button>
-            </div>
-          </form>
-        </div>
-        <div class="psec" id="psec-deadlines">
-          <div class="psec-head deadline-head">
-            <div class="psec-title"><span class="psec-icon di">⚑</span>Deadlines</div>
-            <button class="padd-btn" data-sec="deadline">＋</button>
-          </div>
-          <ul class="plist" id="panel-deadline-list"></ul>
-          <form class="padd-form hidden" id="panel-deadline-form">
-            <input type="text" id="panel-deadline-input" class="pf-input" placeholder="Deadline title…" autocomplete="off">
-            <div class="pf-row">
-              <input type="time" id="panel-deadline-time" class="pf-select">
-              <label class="urgent-lbl"><input type="checkbox" id="panel-deadline-urgent"> Urgent</label>
-              <button type="submit" class="pf-submit ds">Add</button>
-            </div>
-          </form>
-        </div>
-        <div class="psec" id="psec-notes">
-          <div class="psec-head note-head">
-            <div class="psec-title"><span class="psec-icon ni">✎</span>Notes</div>
-            <button class="padd-btn" data-sec="note">＋</button>
-          </div>
-          <ul class="plist" id="panel-note-list"></ul>
-          <form class="padd-form hidden" id="panel-note-form">
-            <textarea id="panel-note-input" class="pf-textarea" placeholder="Write a note…" rows="3"></textarea>
-            <div class="pf-row">
-              <div class="color-picker" id="panel-note-colors">
-                <div class="cp-dot cp-default active" data-color="default"></div>
-                <div class="cp-dot cp-yellow" data-color="yellow"></div>
-                <div class="cp-dot cp-green"  data-color="green"></div>
-                <div class="cp-dot cp-blue"   data-color="blue"></div>
-                <div class="cp-dot cp-pink"   data-color="pink"></div>
-              </div>
-              <button type="submit" class="pf-submit ns">Add</button>
-            </div>
-          </form>
-        </div>
-      </div>
+      <!-- Timeline body — fully JS-rendered -->
+      <div id="panel-body"></div>
     </section>
 
     <!-- Task editor modal -->
     <div id="task-editor-backdrop" class="modal-backdrop hidden">
       <div class="task-editor-modal" id="task-editor-modal">
+        <!-- Fixed topbar -->
         <div class="tem-topbar">
           <span class="tem-topbar-icon">✓</span>
           <span class="tem-topbar-title" id="tem-modal-title">New Task</span>
           <button class="tem-close" id="tem-close" style="margin-left:auto">✕</button>
         </div>
-        <div class="tem-header">
-          <input type="text" id="tem-title" class="tem-title-input" placeholder="Task title…">
-        </div>
-        <div class="tem-meta-row">
-          <label class="tem-meta-item">
-            <span>Status</span>
-            <select id="tem-status" class="tem-select">
-              <option value="todo">To Do</option>
-              <option value="in-progress">In Progress</option>
-              <option value="done">Done</option>
+        <!-- Scrollable middle -->
+        <div class="tem-scroll">
+          <div class="tem-header">
+            <input type="text" id="tem-title" class="tem-title-input" placeholder="Task title…">
+          </div>
+          <!-- Row 1: Status / Priority / Date / Font Color -->
+          <div class="tem-meta-row">
+            <div class="tem-meta-item">
+              <span>Status</span>
+              <select id="tem-status" class="tem-select">
+                <option value="todo">To Do</option>
+                <option value="in-progress">In Progress</option>
+                <option value="done">Done</option>
+              </select>
+            </div>
+            <div class="tem-meta-item">
+              <span>Priority</span>
+              <select id="tem-priority" class="tem-select">
+                <option value="low">Low</option>
+                <option value="normal">Normal</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+            <div class="tem-meta-item">
+              <span>Date</span>
+              <input type="date" id="tem-date" class="tem-select">
+            </div>
+            <div class="tem-meta-item">
+              <span>Time</span>
+              <input type="time" id="tem-time" class="tem-select">
+            </div>
+            <div class="tem-meta-item">
+              <span>Font Color</span>
+              <select class="tem-select" id="tem-font-color">
+                <option value="">Default</option>
+                <option value="#f87171">Red</option>
+                <option value="#fbbf24">Yellow</option>
+                <option value="#34d399">Green</option>
+                <option value="#60a5fa">Blue</option>
+                <option value="#f472b6">Pink</option>
+                <option value="#a78bfa">Purple</option>
+                <option value="#ffffff">White</option>
+              </select>
+            </div>
+          </div>
+          <!-- Row 2: Card color -->
+          <div class="tem-extra-row">
+            <span class="tem-recur-label">Card Color:</span>
+            <div class="color-picker" id="tem-colors">
+              <div class="cp-dot cp-none active" data-color="" title="None">✕</div>
+              <div class="cp-dot cp-yellow"  data-color="yellow"  title="Yellow"></div>
+              <div class="cp-dot cp-green"   data-color="green"   title="Green"></div>
+              <div class="cp-dot cp-blue"    data-color="blue"    title="Blue"></div>
+              <div class="cp-dot cp-pink"    data-color="pink"    title="Pink"></div>
+              <div class="cp-dot cp-purple"  data-color="purple"  title="Purple" style="background:#a78bfa"></div>
+            </div>
+          </div>
+          <!-- Row 3: Recurring toggle + weekdays (weekdays hidden until toggled) -->
+          <div class="tem-extra-row">
+            <label class="recur-toggle-label">
+              <input type="checkbox" id="tem-recur-toggle">
+              <span>Recurring task</span>
+            </label>
+            <div class="recur-expand hidden" id="tem-recur-expand">
+              <span class="tem-recur-label">Repeat on:</span>
+              <div class="recur-days" id="tem-recur-days">
+                <button type="button" class="recur-day-btn" data-day="0">Mo</button>
+                <button type="button" class="recur-day-btn" data-day="1">Tu</button>
+                <button type="button" class="recur-day-btn" data-day="2">We</button>
+                <button type="button" class="recur-day-btn" data-day="3">Th</button>
+                <button type="button" class="recur-day-btn" data-day="4">Fr</button>
+                <button type="button" class="recur-day-btn" data-day="5">Sa</button>
+                <button type="button" class="recur-day-btn" data-day="6">Su</button>
+              </div>
+              <span class="tem-recur-label">Until:</span>
+              <input type="date" id="tem-recur-end" class="tem-select" style="padding:4px 7px;margin-top:0">
+              <span class="tem-recur-hint" id="tem-recur-hint"></span>
+            </div>
+          </div>
+          <!-- RTE toolbar -->
+          <div class="rte-toolbar" id="rte-toolbar">
+            <button type="button" class="rte-btn" data-cmd="bold"          title="Bold"><b>B</b></button>
+            <button type="button" class="rte-btn" data-cmd="italic"        title="Italic"><i>I</i></button>
+            <button type="button" class="rte-btn" data-cmd="underline"     title="Underline"><u>U</u></button>
+            <button type="button" class="rte-btn" data-cmd="strikeThrough" title="Strike"><s>S</s></button>
+            <div class="rte-sep"></div>
+            <button type="button" class="rte-btn" data-cmd="insertUnorderedList" title="Bullet list">≡</button>
+            <button type="button" class="rte-btn" data-cmd="insertOrderedList"   title="Numbered list">1.</button>
+            <div class="rte-sep"></div>
+            <button type="button" class="rte-btn" data-cmd="h2"   title="Heading">H</button>
+            <button type="button" class="rte-btn" data-cmd="code" title="Code">⌨</button>
+            <div class="rte-sep"></div>
+            <button type="button" class="rte-btn" id="rte-img-btn" title="Insert image">🖼</button>
+            <input type="file" id="rte-img-input" accept="image/*" class="hidden">
+            <div class="rte-sep"></div>
+            <select class="rte-btn rte-color-sel" id="rte-color" title="Text color">
+              <option value="">Color</option>
+              <option value="#f87171">Red</option>
+              <option value="#fbbf24">Yellow</option>
+              <option value="#34d399">Green</option>
+              <option value="#60a5fa">Blue</option>
+              <option value="#f472b6">Pink</option>
+              <option value="#a78bfa">Purple</option>
             </select>
-          </label>
-          <label class="tem-meta-item">
-            <span>Priority</span>
-            <select id="tem-priority" class="tem-select">
-              <option value="low">Low</option>
-              <option value="normal">Normal</option>
-              <option value="high">High</option>
-            </select>
-          </label>
-          <label class="tem-meta-item">
-            <span>Date</span>
-            <input type="date" id="tem-date" class="tem-select">
-          </label>
+          </div>
+          <div id="tem-description" class="rte-content" contenteditable="true" data-placeholder="Add description, notes, or attachments…"></div>
         </div>
-        <!-- Rich text editor toolbar -->
-        <div class="rte-toolbar" id="rte-toolbar">
-          <button type="button" class="rte-btn" data-cmd="bold"          title="Bold"><b>B</b></button>
-          <button type="button" class="rte-btn" data-cmd="italic"        title="Italic"><i>I</i></button>
-          <button type="button" class="rte-btn" data-cmd="underline"     title="Underline"><u>U</u></button>
-          <button type="button" class="rte-btn" data-cmd="strikeThrough" title="Strike"><s>S</s></button>
-          <div class="rte-sep"></div>
-          <button type="button" class="rte-btn" data-cmd="insertUnorderedList" title="Bullet list">≡</button>
-          <button type="button" class="rte-btn" data-cmd="insertOrderedList"   title="Numbered list">1.</button>
-          <div class="rte-sep"></div>
-          <button type="button" class="rte-btn" data-cmd="h2"   title="Heading">H</button>
-          <button type="button" class="rte-btn" data-cmd="code" title="Code">⌨</button>
-          <div class="rte-sep"></div>
-          <button type="button" class="rte-btn" id="rte-img-btn" title="Insert image">🖼</button>
-          <input type="file" id="rte-img-input" accept="image/*" class="hidden">
-          <div class="rte-sep"></div>
-          <select class="rte-btn rte-color-sel" id="rte-color" title="Text color">
-            <option value="">Color</option>
-            <option value="#f87171">Red</option>
-            <option value="#fbbf24">Yellow</option>
-            <option value="#34d399">Green</option>
-            <option value="#60a5fa">Blue</option>
-            <option value="#f472b6">Pink</option>
-            <option value="#a78bfa">Purple</option>
-          </select>
-        </div>
-        <div id="tem-description" class="rte-content" contenteditable="true" data-placeholder="Add description, notes, or attachments…"></div>
+        <!-- Fixed footer -->
         <div class="tem-footer">
           <button class="tem-btn-delete" id="tem-delete">Delete Task</button>
           <button class="tem-btn-save"   id="tem-save">Save Changes</button>
@@ -414,12 +407,23 @@
         <div class="nem-header">
           <input type="text" id="nem-title" class="nem-title-input" placeholder="Note title (optional)…">
           <div class="nem-header-right">
+            <span class="nem-picker-label">BG:</span>
             <div class="color-picker" id="nem-colors">
-              <div class="cp-dot cp-default active" data-color="default"></div>
-              <div class="cp-dot cp-yellow" data-color="yellow"></div>
-              <div class="cp-dot cp-green"  data-color="green"></div>
-              <div class="cp-dot cp-blue"   data-color="blue"></div>
-              <div class="cp-dot cp-pink"   data-color="pink"></div>
+              <div class="cp-dot cp-default active" data-color="default" title="Default"></div>
+              <div class="cp-dot cp-yellow" data-color="yellow" title="Yellow"></div>
+              <div class="cp-dot cp-green"  data-color="green"  title="Green"></div>
+              <div class="cp-dot cp-blue"   data-color="blue"   title="Blue"></div>
+              <div class="cp-dot cp-pink"   data-color="pink"   title="Pink"></div>
+            </div>
+            <span class="nem-picker-label">Font:</span>
+            <div class="color-picker" id="nem-font-colors">
+              <div class="cp-dot nem-fc active" data-fc="" title="Default" style="background:var(--tx3);font-size:9px;color:#fff;display:flex;align-items:center;justify-content:center">A</div>
+              <div class="cp-dot nem-fc" data-fc="#f87171" title="Red"    style="background:#f87171"></div>
+              <div class="cp-dot nem-fc" data-fc="#fbbf24" title="Yellow" style="background:#fbbf24"></div>
+              <div class="cp-dot nem-fc" data-fc="#34d399" title="Green"  style="background:#34d399"></div>
+              <div class="cp-dot nem-fc" data-fc="#60a5fa" title="Blue"   style="background:#60a5fa"></div>
+              <div class="cp-dot nem-fc" data-fc="#f472b6" title="Pink"   style="background:#f472b6"></div>
+              <div class="cp-dot nem-fc" data-fc="#a78bfa" title="Purple" style="background:#a78bfa"></div>
             </div>
             <button class="tem-close" id="nem-close">✕</button>
           </div>

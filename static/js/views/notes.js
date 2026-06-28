@@ -53,12 +53,13 @@ window.NotesView = (() => {
     filtered.forEach(n => {
       const card = document.createElement('div');
       card.className = `note-card nc-${n.color}`;
+      if (n.font_color) card.style.color = n.font_color;
       const preview = _strip(n.content).slice(0, 120);
       const thumb = _firstImage(n.content);
       card.innerHTML = `
-        ${n.title ? `<div class="nc-title">${_e(n.title)}</div>` : ''}
+        ${n.title ? `<div class="nc-title" style="${n.font_color?'color:inherit':''}">${_e(n.title)}</div>` : ''}
         ${thumb ? `<img class="nc-thumb" src="${thumb}" alt="">` : ''}
-        <div class="nc-preview">${_e(preview)}${preview.length === 120 ? '…' : ''}</div>
+        <div class="nc-preview" style="${n.font_color?'color:inherit':''}">${_e(preview)}${preview.length === 120 ? '…' : ''}</div>
         <div class="nc-footer">
           <span class="nc-date">${n.date}</span>
           <button class="nc-del" data-id="${n.id}" title="Delete">✕</button>
