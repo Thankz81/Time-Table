@@ -7,20 +7,27 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>TYME TYBLE</title>
+
+  <!-- PWA manifest -->
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- Icons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="/static/icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/static/icons/icon-512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/icons/apple-touch-icon.png">
+
+  <!-- iOS PWA splash / status bar -->
+  <meta name="apple-mobile-web-app-title" content="TymeTyble">
+
+  <!-- Service worker registration -->
   <script>
-    (function(){
-      const c=document.createElement('canvas'); c.width=64; c.height=64;
-      const x=c.getContext('2d');
-      const g=x.createLinearGradient(0,0,64,64);
-      g.addColorStop(0,'#7c6af7'); g.addColorStop(0.5,'#8b5cf6'); g.addColorStop(1,'#ec4899');
-      x.fillStyle=g; x.beginPath();
-      x.roundRect(0,0,64,64,14); x.fill();
-      x.font='38px serif'; x.textAlign='center'; x.textBaseline='middle';
-      x.fillText('📅',32,34);
-      const l=document.createElement('link'); l.rel='icon'; l.href=c.toDataURL();
-      document.head.appendChild(l);
-    })();
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
   </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap">
   <link rel="stylesheet" href="/static/css/base.css">

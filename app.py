@@ -45,6 +45,16 @@ def create_app():
     def index():
         return render_template('index.html')
 
+    @app.route('/manifest.json')
+    def manifest():
+        from flask import send_from_directory
+        return send_from_directory('static', 'manifest.json', mimetype='application/manifest+json')
+
+    @app.route('/sw.js')
+    def service_worker():
+        from flask import send_from_directory
+        return send_from_directory('static', 'sw.js', mimetype='application/javascript')
+
     return app
 
 
