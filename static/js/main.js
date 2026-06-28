@@ -313,6 +313,40 @@ function bootApp(user) {
   // Logout
   document.getElementById('btn-logout').onclick = async () => { await API.logout(); location.reload(); };
 
+  // Delete account
+  document.getElementById('btn-delete-account').onclick = () => {
+    document.getElementById('delete-confirm-input').value = '';
+    document.getElementById('delete-account-confirm').disabled = true;
+    document.getElementById('delete-account-confirm').style.opacity = '.7';
+    document.getElementById('delete-account-error').classList.add('hidden');
+    document.getElementById('delete-account-modal').classList.remove('hidden');
+  };
+  document.getElementById('delete-account-close').onclick = () =>
+    document.getElementById('delete-account-modal').classList.add('hidden');
+  document.getElementById('delete-account-modal').onclick = e => {
+    if (e.target === document.getElementById('delete-account-modal'))
+      document.getElementById('delete-account-modal').classList.add('hidden');
+  };
+  document.getElementById('delete-confirm-input').oninput = e => {
+    const ok = e.target.value === 'DELETE';
+    document.getElementById('delete-account-confirm').disabled = !ok;
+    document.getElementById('delete-account-confirm').style.opacity = ok ? '1' : '.7';
+  };
+  document.getElementById('delete-account-confirm').onclick = async () => {
+    const btn = document.getElementById('delete-account-confirm');
+    const errEl = document.getElementById('delete-account-error');
+    const loader = btn.querySelector('.btn-loader');
+    const text = btn.querySelector('.btn-text');
+    text.classList.add('hidden'); loader.classList.remove('hidden'); btn.disabled = true;
+    try {
+      await API.deleteAccount();
+      location.reload();
+    } catch(e) {
+      errEl.textContent = e.message; errEl.classList.remove('hidden');
+      text.classList.remove('hidden'); loader.classList.add('hidden'); btn.disabled = false;
+    }
+  };
+
   // Init editors
   TaskEditor._init();
   NoteEditor._init();

@@ -3,6 +3,8 @@ from datetime import timedelta
 from models import db
 from flask_mail import Mail
 import os
+from dotenv import load_dotenv
+load_dotenv()
 from routes.auth      import bp as auth_bp
 from routes.calendar  import bp as calendar_bp
 from routes.tasks     import bp as tasks_bp

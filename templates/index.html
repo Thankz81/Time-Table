@@ -141,6 +141,7 @@
           <div class="sb-email" id="sb-email">—</div>
         </div>
         <button class="sb-logout" id="btn-logout" title="Sign out">⏻</button>
+        <button class="sb-delete-account" id="btn-delete-account" title="Delete account">🗑</button>
       </div>
       <nav class="sb-nav">
         <a class="sb-link" data-route="today"    href="#/today">
@@ -429,6 +430,25 @@
       <div class="modal-card" id="stats-card">
         <div class="modal-header"><h3>My Statistics</h3><button class="modal-close" id="stats-close">✕</button></div>
         <div id="stats-body"></div>
+      </div>
+    </div>
+
+    <!-- Delete account confirmation modal -->
+    <div id="delete-account-modal" class="modal-backdrop hidden">
+      <div class="modal-card" style="max-width:400px">
+        <div class="modal-header">
+          <h3 style="color:var(--danger)">Delete Account</h3>
+          <button class="modal-close" id="delete-account-close">✕</button>
+        </div>
+        <div style="padding:0 20px 20px;display:flex;flex-direction:column;gap:16px">
+          <p style="font-size:14px;color:var(--tx2);line-height:1.6">This will permanently delete your account and all your tasks, notes, and deadlines. This cannot be undone.</p>
+          <p style="font-size:13px;color:var(--tx3)">Type <strong style="color:var(--tx)">DELETE</strong> to confirm:</p>
+          <input type="text" id="delete-confirm-input" class="field-input" placeholder="DELETE" autocomplete="off" style="padding:10px 14px">
+          <div id="delete-account-error" class="auth-error hidden"></div>
+          <button class="auth-submit" id="delete-account-confirm" style="background:var(--danger);opacity:.7" disabled>
+            <span class="btn-text">Delete My Account</span><span class="btn-loader hidden">◌</span>
+          </button>
+        </div>
       </div>
     </div>
 

@@ -122,6 +122,18 @@ def reset_password():
     return jsonify({'success': True})
 
 
+@bp.route('/api/auth/account', methods=['DELETE'])
+@login_required
+def delete_account():
+    user = User.query.get(session['user_id'])
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    db.session.delete(user)
+    db.session.commit()
+    session.clear()
+    return jsonify({'success': True})
+
+
 def _send_reset_email(user, token):
     from app import mail
     reset_url = f"{request.host_url.rstrip('/')}/#/reset-password?token={token}"

@@ -22,6 +22,8 @@
 .sb-email{font-size:10px;color:var(--tx3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sb-logout{width:28px;height:28px;border-radius:var(--r6);color:var(--tx3);font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
 .sb-logout:hover{background:var(--danger-dim);color:var(--danger)}
+.sb-delete-account{width:24px;height:24px;border-radius:var(--r6);color:var(--tx3);font-size:11px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;opacity:.5}
+.sb-delete-account:hover{background:var(--danger-dim);color:var(--danger);opacity:1}
 
 /* Nav */
 .sb-nav{flex:1;padding:8px 6px;display:flex;flex-direction:column;gap:1px;overflow-y:auto;overflow-x:hidden}

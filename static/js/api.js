@@ -19,6 +19,7 @@ window.API = (() => {
     logout: () => post('/api/auth/logout', {}),
     forgotPassword: b => post('/api/auth/forgot-password', b),
     resetPassword: b => post('/api/auth/reset-password', b),
+    deleteAccount: () => req('/api/auth/account', { method: 'DELETE' }),
     summary: (y,m) => get(`/api/summary?year=${y}&month=${m}`),
     day: d => get(`/api/day/${d}`),
     upcoming: () => get('/api/upcoming'),
