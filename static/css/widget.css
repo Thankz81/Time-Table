@@ -265,3 +265,24 @@
   font-variant-numeric:tabular-nums;
   flex-shrink:0;
 }
+
+/* ── Mobile ── */
+@media(max-width:768px){
+  /* Move widget away from bottom-right on mobile — sits above bottom safe area */
+  #cal-widget{
+    bottom:max(16px,env(safe-area-inset-bottom,16px));
+    right:12px;
+  }
+  /* Expand body anchors bottom-right on mobile */
+  .cw-body{
+    width:calc(100vw - 24px);
+    max-width:300px;
+  }
+}
+@media(max-width:480px){
+  /* Hide widget entirely on very small phones — calendar is accessible via nav */
+  #cal-widget{display:none}
+  /* Show topstrip more compactly */
+  .today-topstrip{padding:8px 12px}
+  .today-greeting-inline{font-size:12px}
+}

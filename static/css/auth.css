@@ -51,3 +51,15 @@
 .auth-forgot-link:hover{color:var(--p1)}
 .auth-help-text{font-size:13px;color:var(--tx2);margin:0;line-height:1.5}
 .auth-success{background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.3);border-radius:var(--r8);padding:10px 14px;font-size:12px;color:#6ee7b7}
+
+/* ── Mobile ── */
+@media(max-width:480px){
+  #auth-screen{padding:12px;align-items:flex-end}
+  .auth-card{padding:24px 20px;border-radius:var(--r16) var(--r16) 0 0;max-height:96dvh;overflow-y:auto}
+  .auth-logo{font-size:32px}
+  .auth-logo-name{font-size:18px}
+  .avatar-grid{gap:6px}
+  .avatar-opt{width:34px;height:34px;font-size:18px}
+  .field-input{padding:12px 40px 12px 38px;font-size:15px}
+  .auth-submit{padding:14px;font-size:15px}
+}

@@ -163,3 +163,28 @@
 .dl-af-save:hover{opacity:.88}
 .dl-af-cancel{padding:7px 12px;border-radius:var(--r6);border:1px solid var(--border);background:none;color:var(--tx3);font-size:12px;transition:all .15s}
 .dl-af-cancel:hover{background:var(--bg-hover)}
+
+/* ── Mobile ── */
+@media(max-width:640px){
+  /* always show actions on touch — no hover */
+  .tr-actions{opacity:1}
+  .dl-actions{opacity:1}
+  .nc-del{opacity:1}
+  /* work tab bar: smaller text */
+  .work-tab{padding:10px 10px;font-size:12px;gap:4px}
+  /* notes grid: single column on small phones */
+  .notes-grid{grid-template-columns:1fr 1fr}
+  /* filter bar wraps */
+  .tasks-filterbar{flex-wrap:wrap;gap:6px}
+  .notes-filterbar{flex-wrap:wrap}
+  .dl-filterbar{flex-wrap:wrap}
+  /* deadline items: tighter */
+  .dl-item{padding:10px 14px;gap:8px}
+  .dl-date-col{width:36px}
+  .dl-date-day{font-size:15px}
+}
+@media(max-width:400px){
+  .notes-grid{grid-template-columns:1fr}
+  .work-tab{padding:9px 8px;font-size:11px}
+  .wt-badge{display:none}
+}

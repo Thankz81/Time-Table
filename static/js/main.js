@@ -279,10 +279,24 @@ function bootApp(user) {
   document.getElementById('panel-close').onclick = () => Panel.close();
   document.getElementById('overlay').onclick      = () => Panel.close();
 
-  // Sidebar collapse toggle
+  // Sidebar collapse toggle — desktop collapses, mobile overlays
+  const sidebarOverlay = document.getElementById('sidebar-overlay');
+  function isMobile(){ return window.innerWidth <= 900; }
+  function closeMobileSidebar(){
+    document.getElementById('sidebar').classList.remove('mobile-open');
+    sidebarOverlay.classList.remove('visible');
+  }
   document.getElementById('btn-sidebar-toggle').onclick = () => {
-    shell.classList.toggle('sidebar-collapsed');
+    if(isMobile()){
+      const open = document.getElementById('sidebar').classList.toggle('mobile-open');
+      sidebarOverlay.classList.toggle('visible', open);
+    } else {
+      shell.classList.toggle('sidebar-collapsed');
+    }
   };
+  sidebarOverlay.onclick = closeMobileSidebar;
+  // Close mobile sidebar when a nav link is tapped
+  document.querySelectorAll('.sb-link').forEach(l => l.addEventListener('click', ()=>{ if(isMobile()) closeMobileSidebar(); }));
 
   // Sidebar quick-add new task
   document.getElementById('sb-new-task').onclick = () =>
@@ -363,7 +377,7 @@ function bootApp(user) {
   document.addEventListener('keydown', e => {
     const tag = document.activeElement.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement.isContentEditable) return;
-    if (e.key === '[') shell.classList.toggle('sidebar-collapsed');
+    if (e.key === '[' && !isMobile()) shell.classList.toggle('sidebar-collapsed');
     if (e.key === 'n' || e.key === 'N') TaskEditor.open(null, () => { _refreshSidebarSummary(); });
     if (e.key === 'r' || e.key === 'R') { const r = Router.current(); if (r) Router.navigate(r, true); }
     if (e.key === '1') Router.navigate('today');

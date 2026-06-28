@@ -120,3 +120,26 @@
 .note-mini-title{font-size:10px;font-weight:700;color:var(--tx2);margin-bottom:3px;letter-spacing:.2px}
 
 /* mini-cal moved to widget.css */
+
+/* ── Mobile ── */
+@media(max-width:768px){
+  .kpi-strip{grid-template-columns:repeat(2,1fr)}
+  .kpi-card:nth-child(2){border-right:none}
+  .kpi-card:nth-child(3){border-top:1px solid var(--border)}
+  .kpi-card:nth-child(4){border-top:1px solid var(--border);border-right:none}
+  .today-body{grid-template-columns:1fr;grid-template-rows:auto auto;overflow:visible}
+  .today-main{border-right:none;border-bottom:1px solid var(--border);overflow:visible;max-height:none}
+  .today-right{max-height:none;overflow:visible}
+  .today-dl-list{max-height:none}
+  .today-notes-grid{grid-template-columns:1fr 1fr}
+  .trow-edit{opacity:1}
+}
+@media(max-width:480px){
+  .kpi-strip{grid-template-columns:repeat(2,1fr)}
+  .kpi-card{padding:10px 12px;gap:8px}
+  .kpi-num{font-size:17px}
+  .today-quickadd{padding:8px 12px;gap:6px}
+  .today-notes-grid{grid-template-columns:1fr}
+  .today-topstrip{padding:8px 14px;gap:8px}
+  .today-date-inline{display:none}
+}

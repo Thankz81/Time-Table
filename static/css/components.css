@@ -160,3 +160,21 @@
 
 /* ── Skeleton rows ── */
 .skel-row{height:44px;border-radius:var(--r6);margin-bottom:6px}
+
+/* ── Mobile ── */
+@media(max-width:640px){
+  /* task/note editor: full screen on mobile */
+  .task-editor-modal,.note-editor-modal{max-width:100%;max-height:100vh;border-radius:0;height:100dvh}
+  .modal-backdrop{padding:0;align-items:flex-end}
+  .modal-card{max-width:100%;border-radius:var(--r16) var(--r16) 0 0;max-height:90dvh;overflow-y:auto}
+  /* bigger touch targets for action buttons */
+  .ia-btn{width:32px;height:32px}
+  .padd-btn{width:30px;height:30px}
+  .cp-dot{width:20px;height:20px}
+  /* rte toolbar scrollable */
+  .rte-toolbar{overflow-x:auto;flex-wrap:nowrap;padding:6px 12px}
+  /* panel items easier to tap */
+  .pitem{padding:10px 12px}
+  /* toast above bottom safe area */
+  #toast-container{bottom:max(16px,env(safe-area-inset-bottom,16px))}
+}
