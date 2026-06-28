@@ -14,6 +14,38 @@ from routes.deadlines import bp as deadlines_bp
 mail = Mail()
 
 
+def _run_migrations(db):
+    """Add columns that were added after initial deploy. Safe to run on every startup."""
+    is_postgres = db.engine.dialect.name == 'postgresql'
+    migrations = [
+        # (table, column, definition)
+        ('tasks', 'time',       'VARCHAR(5)'),
+        ('tasks', 'bg_color',   'VARCHAR(20)'),
+        ('tasks', 'font_color', 'VARCHAR(20)'),
+        ('tasks', 'recur_id',   'INTEGER'),
+        ('tasks', 'recur_days', 'VARCHAR(20)'),
+        ('tasks', 'recur_end',  'VARCHAR(10)'),
+        ('notes', 'font_color', 'VARCHAR(20)'),
+        ('notes', 'title',      'TEXT'),
+        ('users', 'reset_token',        'VARCHAR(64)'),
+        ('users', 'reset_token_expiry', 'TIMESTAMP'),
+    ]
+    with db.engine.connect() as conn:
+        for table, col, col_type in migrations:
+            if is_postgres:
+                exists = conn.execute(db.text(
+                    "SELECT 1 FROM information_schema.columns "
+                    "WHERE table_name=:t AND column_name=:c"
+                ), {'t': table, 'c': col}).fetchone()
+            else:
+                # SQLite: pragma returns column info
+                rows = conn.execute(db.text(f'PRAGMA table_info("{table}")')).fetchall()
+                exists = any(r[1] == col for r in rows)
+            if not exists:
+                conn.execute(db.text(f'ALTER TABLE "{table}" ADD COLUMN "{col}" {col_type}'))
+        conn.commit()
+
+
 def create_app():
     app = Flask(__name__)
 
@@ -41,6 +73,7 @@ def create_app():
 
     with app.app_context():
         db.create_all()
+        _run_migrations(db)
 
     @app.route('/')
     def index():
