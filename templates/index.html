@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TYME TYBLE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/auth.css">
+  <link rel="stylesheet" href="/static/css/layout.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+  <link rel="stylesheet" href="/static/css/today.css">
+  <link rel="stylesheet" href="/static/css/tasks.css">
+  <link rel="stylesheet" href="/static/css/notes.css">
+  <link rel="stylesheet" href="/static/css/deadlines.css">
+  <link rel="stylesheet" href="/static/css/calendar.css">
+  <link rel="stylesheet" href="/static/css/widget.css">
+</head>
+<body>
+
+  <div class="bg-canvas" aria-hidden="true">
+    <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+    <div class="grid-lines"></div>
+  </div>
+
+  <!-- ══ AUTH SCREEN ══════════════════════════════════════ -->
+  <div id="auth-screen">
+    <div class="auth-card" id="auth-card">
+      <div class="auth-brand">
+        <div class="auth-logo">📅</div>
+        <div><div class="auth-logo-name">T<span class="logo-y">Y</span>ME T<span class="logo-y">Y</span>BLE</div><div class="auth-logo-sub">Smart Timetable</div></div>
+      </div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Sign In</button>
+        <button class="auth-tab" data-tab="register">Create Account</button>
+        <div class="auth-tab-slider"></div>
+      </div>
+      <form class="auth-form" id="login-form">
+        <div class="field-group">
+          <label class="field-label">Username or Email</label>
+          <div class="field-wrap"><span class="field-icon">◈</span>
+            <input type="text" id="login-identity" class="field-input" placeholder="you@example.com" required>
+            </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Password</label>
+          <div class="field-wrap"><span class="field-icon">⬡</span>
+            <input type="password" id="login-password" class="field-input" placeholder="••••••••" required>
+            <button type="button" class="field-toggle" data-target="login-password">👁</button>
+          </div>
+        </div>
+        <div id="login-error" class="auth-error hidden"></div>
+        <button type="submit" class="auth-submit" id="login-btn">
+          <span class="btn-text">Sign In</span><span class="btn-loader hidden">◌</span>
+        </button>
+        <button type="button" class="auth-forgot-link" id="btn-forgot">Forgot password?</button>
+      </form>
+
+      <!-- Forgot password panel -->
+      <div class="auth-form hidden" id="forgot-form">
+        <p class="auth-help-text">Enter your account email and we'll send you a reset link.</p>
+        <div class="field-group">
+          <label class="field-label">Email</label>
+          <div class="field-wrap"><span class="field-icon">✉</span>
+            <input type="email" id="forgot-email" class="field-input" placeholder="you@example.com" required>
+          </div>
+        </div>
+        <div id="forgot-error" class="auth-error hidden"></div>
+        <div id="forgot-success" class="auth-success hidden"></div>
+        <button type="button" class="auth-submit" id="forgot-btn">
+          <span class="btn-text">Send Reset Link</span><span class="btn-loader hidden">◌</span>
+        </button>
+        <button type="button" class="auth-forgot-link" id="btn-back-login">← Back to Sign In</button>
+      </div>
+
+      <!-- Reset password panel (reached via email link token in URL hash) -->
+      <div class="auth-form hidden" id="reset-form">
+        <p class="auth-help-text">Choose a new password for your account.</p>
+        <div class="field-group">
+          <label class="field-label">New Password <span class="field-hint">(min 6 chars)</span></label>
+          <div class="field-wrap"><span class="field-icon">⬡</span>
+            <input type="password" id="reset-password" class="field-input" placeholder="••••••••" required>
+            <button type="button" class="field-toggle" data-target="reset-password">👁</button>
+          </div>
+          <div class="pw-strength"><div class="pw-bar" id="reset-pw-bar"></div></div>
+        </div>
+        <div id="reset-error" class="auth-error hidden"></div>
+        <div id="reset-success" class="auth-success hidden"></div>
+        <button type="button" class="auth-submit" id="reset-btn">
+          <span class="btn-text">Set New Password</span><span class="btn-loader hidden">◌</span>
+        </button>
+      </div>
+      <form class="auth-form hidden" id="register-form">
+        <div class="avatar-picker">
+          <div class="avatar-label">Pick your avatar</div>
+          <div class="avatar-grid" id="avatar-grid"></div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Username</label>
+          <div class="field-wrap"><span class="field-icon">◈</span>
+            <input type="text" id="reg-username" class="field-input" placeholder="cooluser42" required>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Email</label>
+          <div class="field-wrap"><span class="field-icon">✉</span>
+            <input type="email" id="reg-email" class="field-input" placeholder="you@example.com" required>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Password <span class="field-hint">(min 6 chars)</span></label>
+          <div class="field-wrap"><span class="field-icon">⬡</span>
+            <input type="password" id="reg-password" class="field-input" placeholder="••••••••" required>
+            <button type="button" class="field-toggle" data-target="reg-password">👁</button>
+          </div>
+          <div class="pw-strength"><div class="pw-bar"></div></div>
+        </div>
+        <div id="reg-error" class="auth-error hidden"></div>
+        <button type="submit" class="auth-submit" id="reg-btn">
+          <span class="btn-text">Create Account</span><span class="btn-loader hidden">◌</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══ APP SHELL ════════════════════════════════════════ -->
+  <div id="app-shell" class="hidden">
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div class="sb-brand">
+        <div class="sb-logo">📅</div>
+        <div class="sb-name">T<span class="logo-y">Y</span>ME T<span class="logo-y">Y</span>BLE</div>
+        <div class="sb-sub" style="margin-left:auto;font-size:9px">BETA</div>
+      </div>
+      <div class="sb-user" id="sb-user">
+        <div class="sb-avatar" id="sb-avatar">👤</div>
+        <div class="sb-user-info">
+          <div class="sb-username" id="sb-username">—</div>
+          <div class="sb-email" id="sb-email">—</div>
+        </div>
+        <button class="sb-logout" id="btn-logout" title="Sign out">⏻</button>
+      </div>
+      <nav class="sb-nav">
+        <a class="sb-link" data-route="today"    href="#/today">
+          <span class="sb-icon">🏠</span><span class="sb-link-text">Home</span>
+          <span class="sb-link-count" id="sb-lc-today"></span>
+        </a>
+        <a class="sb-link" data-route="calendar" href="#/calendar">
+          <span class="sb-icon">📅</span><span class="sb-link-text">Calendar</span>
+        </a>
+        <a class="sb-link" data-route="work"     href="#/work">
+          <span class="sb-icon">⊞</span><span class="sb-link-text">My Work</span>
+          <span class="sb-link-count" id="sb-lc-work"></span>
+        </a>
+      </nav>
+
+      <div class="sb-quick-add">
+        <button class="sb-qa-btn" id="sb-new-task">
+          <span style="font-size:16px">＋</span><span class="sb-link-text">New Task</span>
+        </button>
+      </div>
+
+      <div class="sb-summary">
+        <div class="sb-sum-title">Today</div>
+        <div class="sb-sum-row" id="sb-sum-row-tasks" title="View tasks">
+          <span class="sb-sum-dot task"></span>
+          <span class="sb-sum-label">Tasks</span>
+          <span class="sb-sum-val" id="sb-sum-tasks">—</span>
+        </div>
+        <div class="sb-sum-row" id="sb-sum-row-dl" title="View deadlines">
+          <span class="sb-sum-dot deadline"></span>
+          <span class="sb-sum-label">Deadlines</span>
+          <span class="sb-sum-val" id="sb-sum-deadlines">—</span>
+        </div>
+        <div class="sb-sum-row" id="sb-sum-row-notes" title="View notes">
+          <span class="sb-sum-dot note"></span>
+          <span class="sb-sum-label">Notes</span>
+          <span class="sb-sum-val" id="sb-sum-notes">—</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <div id="content-area">
+
+      <!-- Top bar -->
+      <header id="topbar">
+        <div id="topbar-left">
+          <button class="tb-collapse-btn" id="btn-sidebar-toggle" title="Toggle sidebar ([ key)">☰</button>
+          <div id="topbar-title">Today</div>
+        </div>
+        <div id="topbar-nav">
+          <button class="tb-nav-pill" data-route="today">🏠 Home</button>
+          <button class="tb-nav-pill" data-route="calendar">📅 Calendar</button>
+          <button class="tb-nav-pill" data-route="work">⊞ My Work</button>
+        </div>
+        <div id="topbar-actions">
+          <button class="tb-action-btn primary" id="btn-add-task">＋ Task</button>
+          <button class="tb-icon-btn" id="btn-refresh" title="Refresh (R)">↺</button>
+          <button class="tb-icon-btn" id="btn-stats" title="Stats">📊</button>
+        </div>
+      </header>
+
+      <!-- View containers -->
+      <div id="view-today"    class="view hidden"></div>
+      <div id="view-calendar" class="view hidden"></div>
+
+      <!-- Unified My Work view -->
+      <div id="view-work" class="view hidden">
+        <div class="work-tab-bar">
+          <button class="work-tab active" data-tab="tasks">
+            <span class="wt-icon">✓</span> Tasks <span class="wt-badge" id="wt-badge-tasks">0</span>
+          </button>
+          <button class="work-tab" data-tab="notes">
+            <span class="wt-icon">✎</span> Notes <span class="wt-badge" id="wt-badge-notes">0</span>
+          </button>
+          <button class="work-tab" data-tab="deadlines">
+            <span class="wt-icon">⚑</span> Deadlines <span class="wt-badge" id="wt-badge-deadlines">0</span>
+          </button>
+          <div class="wt-slider" id="wt-slider"></div>
+        </div>
+        <div id="view-tasks"     class="work-pane"></div>
+        <div id="view-notes"     class="work-pane hidden"></div>
+        <div id="view-deadlines" class="work-pane hidden"></div>
+      </div>
+    </div>
+
+    <!-- Day panel (shared across views) -->
+    <div id="overlay"></div>
+    <section id="day-panel">
+      <div id="panel-header">
+        <div class="ph-left">
+          <div id="ph-weekday"></div>
+          <div id="ph-date"></div>
+        </div>
+        <div class="ph-right">
+          <span id="ph-today-badge" class="today-badge hidden">Today</span>
+          <button id="panel-close">✕</button>
+        </div>
+      </div>
+      <div id="progress-bar-wrap" class="hidden">
+        <div class="prog-meta"><span id="prog-label">0/0 tasks</span><span id="prog-pct">0%</span></div>
+        <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+      </div>
+      <div id="today-strip" class="hidden">
+        <div class="tstrip-item"><span class="tstrip-n" id="ts-todo">0</span><span class="tstrip-l">To Do</span></div>
+        <div class="tstrip-sep"></div>
+        <div class="tstrip-item"><span class="tstrip-n" id="ts-prog">0</span><span class="tstrip-l">In Progress</span></div>
+        <div class="tstrip-sep"></div>
+        <div class="tstrip-item"><span class="tstrip-n" id="ts-done">0</span><span class="tstrip-l">Done</span></div>
+      </div>
+      <div id="panel-body">
+        <div class="psec" id="psec-tasks">
+          <div class="psec-head task-head">
+            <div class="psec-title"><span class="psec-icon ti">✓</span>Tasks</div>
+            <button class="padd-btn" data-sec="task">＋</button>
+          </div>
+          <ul class="plist" id="panel-task-list"></ul>
+          <form class="padd-form hidden" id="panel-task-form">
+            <input type="text" id="panel-task-input" class="pf-input" placeholder="Task title…" autocomplete="off">
+            <div class="pf-row">
+              <select id="panel-task-status" class="pf-select">
+                <option value="todo">To Do</option>
+                <option value="in-progress">In Progress</option>
+                <option value="done">Done</option>
+              </select>
+              <select id="panel-task-priority" class="pf-select">
+                <option value="low">Low</option>
+                <option value="normal" selected>Normal</option>
+                <option value="high">High</option>
+              </select>
+              <button type="submit" class="pf-submit ts">Add</button>
+            </div>
+          </form>
+        </div>
+        <div class="psec" id="psec-deadlines">
+          <div class="psec-head deadline-head">
+            <div class="psec-title"><span class="psec-icon di">⚑</span>Deadlines</div>
+            <button class="padd-btn" data-sec="deadline">＋</button>
+          </div>
+          <ul class="plist" id="panel-deadline-list"></ul>
+          <form class="padd-form hidden" id="panel-deadline-form">
+            <input type="text" id="panel-deadline-input" class="pf-input" placeholder="Deadline title…" autocomplete="off">
+            <div class="pf-row">
+              <input type="time" id="panel-deadline-time" class="pf-select">
+              <label class="urgent-lbl"><input type="checkbox" id="panel-deadline-urgent"> Urgent</label>
+              <button type="submit" class="pf-submit ds">Add</button>
+            </div>
+          </form>
+        </div>
+        <div class="psec" id="psec-notes">
+          <div class="psec-head note-head">
+            <div class="psec-title"><span class="psec-icon ni">✎</span>Notes</div>
+            <button class="padd-btn" data-sec="note">＋</button>
+          </div>
+          <ul class="plist" id="panel-note-list"></ul>
+          <form class="padd-form hidden" id="panel-note-form">
+            <textarea id="panel-note-input" class="pf-textarea" placeholder="Write a note…" rows="3"></textarea>
+            <div class="pf-row">
+              <div class="color-picker" id="panel-note-colors">
+                <div class="cp-dot cp-default active" data-color="default"></div>
+                <div class="cp-dot cp-yellow" data-color="yellow"></div>
+                <div class="cp-dot cp-green"  data-color="green"></div>
+                <div class="cp-dot cp-blue"   data-color="blue"></div>
+                <div class="cp-dot cp-pink"   data-color="pink"></div>
+              </div>
+              <button type="submit" class="pf-submit ns">Add</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Task editor modal -->
+    <div id="task-editor-backdrop" class="modal-backdrop hidden">
+      <div class="task-editor-modal" id="task-editor-modal">
+        <div class="tem-topbar">
+          <span class="tem-topbar-icon">✓</span>
+          <span class="tem-topbar-title" id="tem-modal-title">New Task</span>
+          <button class="tem-close" id="tem-close" style="margin-left:auto">✕</button>
+        </div>
+        <div class="tem-header">
+          <input type="text" id="tem-title" class="tem-title-input" placeholder="Task title…">
+        </div>
+        <div class="tem-meta-row">
+          <label class="tem-meta-item">
+            <span>Status</span>
+            <select id="tem-status" class="tem-select">
+              <option value="todo">To Do</option>
+              <option value="in-progress">In Progress</option>
+              <option value="done">Done</option>
+            </select>
+          </label>
+          <label class="tem-meta-item">
+            <span>Priority</span>
+            <select id="tem-priority" class="tem-select">
+              <option value="low">Low</option>
+              <option value="normal">Normal</option>
+              <option value="high">High</option>
+            </select>
+          </label>
+          <label class="tem-meta-item">
+            <span>Date</span>
+            <input type="date" id="tem-date" class="tem-select">
+          </label>
+        </div>
+        <!-- Rich text editor toolbar -->
+        <div class="rte-toolbar" id="rte-toolbar">
+          <button type="button" class="rte-btn" data-cmd="bold"          title="Bold"><b>B</b></button>
+          <button type="button" class="rte-btn" data-cmd="italic"        title="Italic"><i>I</i></button>
+          <button type="button" class="rte-btn" data-cmd="underline"     title="Underline"><u>U</u></button>
+          <button type="button" class="rte-btn" data-cmd="strikeThrough" title="Strike"><s>S</s></button>
+          <div class="rte-sep"></div>
+          <button type="button" class="rte-btn" data-cmd="insertUnorderedList" title="Bullet list">≡</button>
+          <button type="button" class="rte-btn" data-cmd="insertOrderedList"   title="Numbered list">1.</button>
+          <div class="rte-sep"></div>
+          <button type="button" class="rte-btn" data-cmd="h2"   title="Heading">H</button>
+          <button type="button" class="rte-btn" data-cmd="code" title="Code">⌨</button>
+          <div class="rte-sep"></div>
+          <button type="button" class="rte-btn" id="rte-img-btn" title="Insert image">🖼</button>
+          <input type="file" id="rte-img-input" accept="image/*" class="hidden">
+          <div class="rte-sep"></div>
+          <select class="rte-btn rte-color-sel" id="rte-color" title="Text color">
+            <option value="">Color</option>
+            <option value="#f87171">Red</option>
+            <option value="#fbbf24">Yellow</option>
+            <option value="#34d399">Green</option>
+            <option value="#60a5fa">Blue</option>
+            <option value="#f472b6">Pink</option>
+            <option value="#a78bfa">Purple</option>
+          </select>
+        </div>
+        <div id="tem-description" class="rte-content" contenteditable="true" data-placeholder="Add description, notes, or attachments…"></div>
+        <div class="tem-footer">
+          <button class="tem-btn-delete" id="tem-delete">Delete Task</button>
+          <button class="tem-btn-save"   id="tem-save">Save Changes</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Note editor modal -->
+    <div id="note-editor-backdrop" class="modal-backdrop hidden">
+      <div class="note-editor-modal" id="note-editor-modal">
+        <div class="nem-header">
+          <input type="text" id="nem-title" class="nem-title-input" placeholder="Note title (optional)…">
+          <div class="nem-header-right">
+            <div class="color-picker" id="nem-colors">
+              <div class="cp-dot cp-default active" data-color="default"></div>
+              <div class="cp-dot cp-yellow" data-color="yellow"></div>
+              <div class="cp-dot cp-green"  data-color="green"></div>
+              <div class="cp-dot cp-blue"   data-color="blue"></div>
+              <div class="cp-dot cp-pink"   data-color="pink"></div>
+            </div>
+            <button class="tem-close" id="nem-close">✕</button>
+          </div>
+        </div>
+        <div class="rte-toolbar">
+          <button type="button" class="rte-btn" data-cmd="bold"><b>B</b></button>
+          <button type="button" class="rte-btn" data-cmd="italic"><i>I</i></button>
+          <button type="button" class="rte-btn" data-cmd="underline"><u>U</u></button>
+          <div class="rte-sep"></div>
+          <button type="button" class="rte-btn" data-cmd="insertUnorderedList">≡</button>
+          <button type="button" class="rte-btn" data-cmd="insertOrderedList">1.</button>
+          <div class="rte-sep"></div>
+          <button type="button" class="rte-btn" id="nem-img-btn">🖼</button>
+          <input type="file" id="nem-img-input" accept="image/*" class="hidden">
+          <div class="rte-sep"></div>
+          <select class="rte-btn rte-color-sel" id="nem-color-sel">
+            <option value="">Color</option>
+            <option value="#f87171">Red</option>
+            <option value="#fbbf24">Yellow</option>
+            <option value="#34d399">Green</option>
+            <option value="#60a5fa">Blue</option>
+            <option value="#f472b6">Pink</option>
+          </select>
+        </div>
+        <div id="nem-content" class="rte-content" contenteditable="true" data-placeholder="Write your note…"></div>
+        <div class="tem-footer">
+          <button class="tem-btn-delete" id="nem-delete">Delete Note</button>
+          <button class="tem-btn-save"   id="nem-save">Save Note</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats modal -->
+    <div id="stats-modal" class="modal-backdrop hidden">
+      <div class="modal-card" id="stats-card">
+        <div class="modal-header"><h3>My Statistics</h3><button class="modal-close" id="stats-close">✕</button></div>
+        <div id="stats-body"></div>
+      </div>
+    </div>
+
+  </div><!-- /app-shell -->
+
+  <div id="toast-container" aria-live="polite"></div>
+
+  <!-- JS load order: api → auth → store → router → components → views → main -->
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/auth.js"></script>
+  <script src="/static/js/store.js"></script>
+  <script src="/static/js/router.js"></script>
+  <script src="/static/js/components/clock.js"></script>
+  <script src="/static/js/components/miniCalendar.js"></script>
+  <script src="/static/js/components/editor.js"></script>
+  <script src="/static/js/components/panel.js"></script>
+  <script src="/static/js/views/today.js"></script>
+  <script src="/static/js/views/calendar.js"></script>
+  <script src="/static/js/views/tasks.js"></script>
+  <script src="/static/js/views/notes.js"></script>
+  <script src="/static/js/views/deadlines.js"></script>
+  <script src="/static/js/views/work.js"></script>
+  <script src="/static/js/main.js"></script>
+</body>
+</html>

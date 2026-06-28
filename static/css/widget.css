@@ -1,0 +1,267 @@
+/* widget.css — floating calendar widget */
+
+/* ── Floating widget ── */
+#cal-widget{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  z-index:200;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:8px;
+  pointer-events:none;
+}
+#cal-widget > *{ pointer-events:all; }
+
+/* ── Toggle pill ── */
+.cw-toggle{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:8px 14px;
+  background:var(--bg-surface);
+  border:1px solid var(--border-strong);
+  border-radius:var(--r50);
+  cursor:pointer;
+  transition:all .2s var(--ease-out);
+  box-shadow:var(--shadow);
+  user-select:none;
+  white-space:nowrap;
+}
+.cw-toggle:hover{
+  background:var(--bg-hover);
+  border-color:var(--accent-border);
+  box-shadow:0 8px 28px rgba(0,0,0,.5);
+  transform:translateY(-1px);
+}
+#cal-widget.cw-expanded .cw-toggle{
+  background:var(--accent-dim);
+  border-color:var(--accent-border);
+  transform:translateY(-2px);
+}
+@keyframes pillPop{
+  0%  { transform:scale(1); }
+  40% { transform:scale(.92) translateY(3px); }
+  100%{ transform:scale(1) translateY(0); }
+}
+#cal-widget.cw-closing .cw-toggle{
+  animation:pillPop .28s var(--ease-out) forwards;
+}
+.cw-toggle-icon{ font-size:15px; }
+.cw-toggle-label{
+  font-size:12px;
+  font-weight:600;
+  color:var(--tx2);
+}
+.cw-dot-row{
+  display:flex;
+  gap:3px;
+  align-items:center;
+}
+
+/* ── Expanded body ── */
+.cw-body{
+  background:var(--bg-surface);
+  border:1px solid var(--border-strong);
+  border-radius:var(--r16);
+  box-shadow:var(--shadow-lg);
+  width:260px;
+  overflow:hidden;
+  opacity:0;
+  transform:translateY(16px) scale(.88);
+  transform-origin:bottom right;
+  transition:opacity .25s var(--ease-out), transform .3s cubic-bezier(.34,1.4,.64,1);
+}
+.cw-body.open{
+  opacity:1;
+  transform:translateY(0) scale(1);
+}
+/* After close animation finishes — remove from flow entirely */
+.cw-body.hidden-off{
+  display:none;
+}
+
+/* ── Widget header ── */
+.cw-header{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  padding:12px 14px 8px;
+  border-bottom:1px solid var(--border);
+  background:var(--bg-elevated);
+}
+.cw-month{
+  flex:1;
+  font-size:13px;
+  font-weight:700;
+  color:var(--tx);
+  letter-spacing:-.2px;
+  -webkit-text-fill-color:var(--tx);
+}
+.cw-nav{
+  width:24px;
+  height:24px;
+  border-radius:var(--r6);
+  background:none;
+  border:1px solid var(--border);
+  color:var(--tx3);
+  font-size:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:all .12s;
+  flex-shrink:0;
+}
+.cw-nav:hover{ background:var(--bg-hover); color:var(--tx); }
+.cw-today-dot{
+  width:24px;
+  height:24px;
+  border-radius:var(--r6);
+  background:none;
+  border:1px solid var(--accent-border);
+  color:var(--accent);
+  font-size:11px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:all .12s;
+  flex-shrink:0;
+}
+.cw-today-dot:hover{ background:var(--accent-dim); }
+
+/* ── Grid ── */
+.cw-grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:1px;
+  padding:8px 10px 6px;
+  background:var(--bg-surface);
+}
+.cw-dh{
+  text-align:center;
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.4px;
+  text-transform:uppercase;
+  color:var(--tx3);
+  padding:2px 0 4px;
+}
+.cw-cell{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:2px 1px;
+  border-radius:var(--r4);
+  cursor:pointer;
+  transition:background .1s;
+  position:relative;
+}
+.cw-cell:hover{ background:var(--bg-hover); }
+.cw-other{ opacity:.28; pointer-events:none; }
+.cw-today .cw-day-num{
+  background:var(--accent);
+  color:#fff;
+  font-weight:700;
+  box-shadow:0 0 0 2px rgba(124,106,247,.3);
+}
+.cw-cell.cw-selected .cw-day-num{
+  background:var(--bg-active);
+  color:var(--accent);
+  font-weight:700;
+}
+.cw-day-num{
+  width:22px;
+  height:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  font-size:11px;
+  font-weight:500;
+  color:var(--tx2);
+  transition:all .12s;
+  line-height:1;
+}
+.cw-dots{
+  display:flex;
+  gap:2px;
+  justify-content:center;
+  margin-top:1px;
+  min-height:5px;
+}
+.cw-dot{
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  flex-shrink:0;
+}
+.cw-dot-task    { background:var(--task-c); }
+.cw-dot-dl      { background:var(--dl-c); }
+.cw-dot-note    { background:var(--note-c); }
+
+/* ── Legend ── */
+.cw-legend{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  padding:6px 14px 10px;
+  border-top:1px solid var(--border);
+}
+.cw-leg{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  font-size:10px;
+  color:var(--tx3);
+}
+.cw-leg-dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+}
+
+/* ── Today top strip (replaces big hero) ── */
+.today-topstrip{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 24px;
+  border-bottom:1px solid var(--border);
+  background:var(--bg-surface);
+  gap:12px;
+}
+.today-topstrip-left{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+}
+.today-greeting-inline{
+  font-size:13px;
+  color:var(--tx3);
+  white-space:nowrap;
+}
+.today-greeting-inline strong{
+  color:var(--tx);
+  font-weight:600;
+}
+.today-date-inline{
+  font-size:12px;
+  color:var(--tx3);
+  padding-left:12px;
+  border-left:1px solid var(--border);
+  white-space:nowrap;
+}
+.today-clock-inline{
+  font-size:13px;
+  font-weight:700;
+  color:var(--accent);
+  letter-spacing:.5px;
+  font-variant-numeric:tabular-nums;
+  flex-shrink:0;
+}
