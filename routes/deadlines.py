@@ -29,6 +29,7 @@ def create():
         title=data['title'].strip(),
         time=data.get('time') or None,
         urgent=bool(data.get('urgent', False)),
+        link=data.get('link') or None,
     )
     db.session.add(dl)
     db.session.commit()
@@ -44,6 +45,7 @@ def update(dl_id):
     if 'time'   in data: dl.time   = data['time'] or None
     if 'urgent' in data: dl.urgent = bool(data['urgent'])
     if 'date'   in data: dl.date   = data['date']
+    if 'link'   in data: dl.link   = data['link'] or None
     db.session.commit()
     return jsonify(dl.to_dict())
 

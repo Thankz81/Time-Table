@@ -93,6 +93,9 @@ window.Preview = (() => {
       if (thumb) { const img = document.createElement('img'); img.className='pv-thumb'; img.src=thumb; img.alt=''; bodyEl.appendChild(img); }
     }
 
+    const taskLink = _linkRow(t.link);
+    if (taskLink) bodyEl.appendChild(taskLink);
+
     statusBtn.classList.remove('hidden');
     statusBtn.textContent = isDone ? '↩ Mark To Do' : '✓ Mark Done';
     statusBtn.onclick = async () => {
@@ -143,6 +146,8 @@ window.Preview = (() => {
       sec.innerHTML = `<div class="pv-note-preview">${n.content}</div>`;
       bodyEl.appendChild(sec);
     }
+    const noteLink = _linkRow(n.link);
+    if (noteLink) bodyEl.appendChild(noteLink);
 
     delBtn.onclick = async () => {
       if (!confirm('Delete this note?')) return;
@@ -176,6 +181,9 @@ window.Preview = (() => {
     cd.textContent = text;
     bodyEl.appendChild(cd);
 
+    const dlLink = _linkRow(d.link);
+    if (dlLink) bodyEl.appendChild(dlLink);
+
     delBtn.onclick = async () => {
       if (!confirm(`Delete "${d.title}"?`)) return;
       try { await API.deleteDeadline(d.id); Toast.show('Deadline deleted'); close(); if (_onChanged) _onChanged(); }
@@ -202,6 +210,20 @@ window.Preview = (() => {
     }
     if (diffDays <= 3) return { text:`${diffDays} day${diffDays===1?'':'s'} left`, cls:'soon' };
     return { text:`${diffDays} days left`, cls:'' };
+  }
+
+  function _linkRow(url) {
+    if (!url) return null;
+    const div = document.createElement('div');
+    div.className = 'pv-link-row';
+    const a = document.createElement('a');
+    a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    a.className = 'pv-link';
+    a.textContent = url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+    a.title = url;
+    div.innerHTML = '<span class="pv-link-icon">🔗</span>';
+    div.appendChild(a);
+    return div;
   }
 
   function _firstImage(s) { const d=document.createElement('div');d.innerHTML=s||'';const i=d.querySelector('img');return i?i.src:null; }

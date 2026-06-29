@@ -73,6 +73,7 @@ def create():
         time        = data.get('time', '') or None,
         bg_color    = data.get('bg_color', '') or None,
         font_color  = data.get('font_color', '') or None,
+        link        = data.get('link', '') or None,
     )
     db.session.add(task)
     db.session.flush()  # get task.id before commit
@@ -100,6 +101,7 @@ def update(task_id):
     if 'date'        in data: task.date        = data['date']
     if 'bg_color'    in data: task.bg_color    = data['bg_color'] or None
     if 'font_color'  in data: task.font_color  = data['font_color'] or None
+    if 'link'        in data: task.link        = data['link'] or None
 
     # Re-expand recurrence only when recur fields are explicitly included in the payload
     if 'recur_days' in data or 'recur_end' in data:

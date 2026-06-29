@@ -27,6 +27,9 @@ def _run_migrations(db):
         ('tasks', 'recur_end',  'VARCHAR(10)'),
         ('notes', 'font_color', 'VARCHAR(20)'),
         ('notes', 'title',      'TEXT'),
+        ('notes', 'link',       'TEXT'),
+        ('tasks', 'link',       'TEXT'),
+        ('deadlines', 'link',   'TEXT'),
         ('users', 'reset_token',        'VARCHAR(64)'),
         ('users', 'reset_token_expiry', 'TIMESTAMP'),
     ]

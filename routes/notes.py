@@ -30,6 +30,7 @@ def create():
         content    = data['content'],
         color      = data.get('color', 'default'),
         font_color = data.get('font_color', '') or None,
+        link       = data.get('link', '') or None,
     )
     db.session.add(note)
     db.session.commit()
@@ -45,6 +46,7 @@ def update(note_id):
     if 'content'    in data: note.content    = data['content']
     if 'color'      in data: note.color      = data['color']
     if 'font_color' in data: note.font_color = data['font_color'] or None
+    if 'link'       in data: note.link       = data['link'] or None
     db.session.commit()
     return jsonify(note.to_dict())
 

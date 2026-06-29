@@ -61,6 +61,7 @@ class Task(db.Model):
     recur_id    = db.Column(db.Integer, nullable=True, index=True)
     recur_days  = db.Column(db.String(20), nullable=True)
     recur_end   = db.Column(db.String(10), nullable=True)
+    link        = db.Column(db.Text, nullable=True)
     created_at  = db.Column(db.DateTime, default=datetime.utcnow)
 
     def to_dict(self):
@@ -74,6 +75,7 @@ class Task(db.Model):
             'recur_id': self.recur_id,
             'recur_days': self.recur_days or '',
             'recur_end': self.recur_end or '',
+            'link': self.link or '',
         }
 
 
@@ -86,6 +88,7 @@ class Note(db.Model):
     content    = db.Column(db.Text, nullable=False)   # stores HTML with embedded base64 images
     color      = db.Column(db.String(20), nullable=False, default='default')
     font_color = db.Column(db.String(20), nullable=True)   # css color value for card text
+    link       = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def to_dict(self):
@@ -94,6 +97,7 @@ class Note(db.Model):
             'title': self.title or '',
             'content': self.content, 'color': self.color,
             'font_color': self.font_color or '',
+            'link': self.link or '',
         }
 
 
@@ -105,10 +109,12 @@ class Deadline(db.Model):
     title      = db.Column(db.Text, nullable=False)
     time       = db.Column(db.String(5),  nullable=True)
     urgent     = db.Column(db.Boolean, nullable=False, default=False)
+    link       = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def to_dict(self):
         return {
             'id': self.id, 'date': self.date,
             'title': self.title, 'time': self.time, 'urgent': self.urgent,
+            'link': self.link or '',
         }

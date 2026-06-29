@@ -151,6 +151,26 @@
 .tem-select:focus{border-color:var(--accent)}
 .tem-select option{background:var(--bg-surface)}
 
+/* Link field — task editor */
+.tem-link-wrap{display:flex;align-items:center;gap:6px;flex:1;background:var(--bg);border:1px solid var(--border);border-radius:var(--r6);padding:5px 10px;transition:border-color .15s;min-width:0}
+.tem-link-wrap:focus-within{border-color:var(--accent)}
+.tem-link-prefix{font-size:13px;flex-shrink:0;color:var(--tx3)}
+.tem-link-input{flex:1;background:none;border:none;outline:none;color:var(--tx);font-size:12px;min-width:0}
+.tem-link-input::placeholder{color:var(--tx3)}
+
+/* Link field — note editor */
+.nem-link-row{display:flex;align-items:center;gap:6px;padding:7px 18px;border-bottom:1px solid var(--border);background:var(--bg-elevated);flex-shrink:0}
+.nem-link-prefix{font-size:13px;flex-shrink:0;color:var(--tx3)}
+.nem-link-input{flex:1;background:none;border:none;outline:none;color:var(--tx);font-size:12px;border-bottom:1px solid transparent;transition:border-color .15s;padding-bottom:1px}
+.nem-link-input:focus{border-bottom-color:var(--accent)}
+.nem-link-input::placeholder{color:var(--tx3)}
+
+/* Link row in preview */
+.pv-link-row{display:flex;align-items:center;gap:8px;margin-top:12px;padding:10px 14px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--r8)}
+.pv-link-icon{font-size:14px;flex-shrink:0}
+.pv-link{font-size:12px;color:var(--accent);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
+.pv-link:hover{text-decoration:underline}
+
 /* RTE */
 .rte-toolbar{display:flex;align-items:center;gap:2px;padding:6px 18px;border-bottom:1px solid var(--border);flex-wrap:wrap;flex-shrink:0;background:var(--bg-elevated)}
 .rte-btn{padding:4px 8px;border-radius:var(--r4);background:none;color:var(--tx3);font-size:12px;transition:all .12s;border:1px solid transparent;line-height:1}

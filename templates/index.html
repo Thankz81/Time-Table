@@ -168,8 +168,14 @@
           <div class="sb-username" id="sb-username">—</div>
           <div class="sb-email" id="sb-email">—</div>
         </div>
-        <button class="sb-logout" id="btn-logout" title="Sign out">⏻</button>
-        <button class="sb-delete-account" id="btn-delete-account" title="Delete account">🗑</button>
+      </div>
+      <div class="sb-account-actions">
+        <button class="sb-logout-btn" id="btn-logout" title="Sign out">
+          <span class="sba-icon">⏻</span><span class="sba-label">Sign Out</span>
+        </button>
+        <button class="sb-delete-btn" id="btn-delete-account" title="Delete account">
+          <span class="sba-icon">🗑</span><span class="sba-label">Delete Account</span>
+        </button>
       </div>
       <nav class="sb-nav">
         <a class="sb-link" data-route="today"    href="#/today">
@@ -372,6 +378,14 @@
               <span class="tem-recur-hint" id="tem-recur-hint"></span>
             </div>
           </div>
+          <!-- Link -->
+          <div class="tem-extra-row">
+            <span class="tem-recur-label">Link:</span>
+            <div class="tem-link-wrap">
+              <span class="tem-link-prefix">🔗</span>
+              <input type="url" id="tem-link" class="tem-link-input" placeholder="https://…">
+            </div>
+          </div>
           <!-- RTE toolbar -->
           <div class="rte-toolbar" id="rte-toolbar">
             <button type="button" class="rte-btn" data-cmd="bold"          title="Bold"><b>B</b></button>
@@ -445,6 +459,10 @@
             <div class="rcd-dot" data-color="#f472b6" title="Pink"   style="background:#f472b6"></div>
             <div class="rcd-dot" data-color="#a78bfa" title="Purple" style="background:#a78bfa"></div>
           </div>
+        </div>
+        <div class="nem-link-row">
+          <span class="nem-link-prefix">🔗</span>
+          <input type="url" id="nem-link" class="nem-link-input" placeholder="Attach a link (optional)…">
         </div>
         <div id="nem-content" class="rte-content" contenteditable="true" data-placeholder="Write your note…"></div>
         <div class="tem-footer">

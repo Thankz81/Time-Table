@@ -33,6 +33,10 @@ window.DeadlinesView = (() => {
             <input type="checkbox" id="daf-urgent" style="accent-color:var(--dl-c)"> Mark as Urgent
           </label>
         </div>
+        <div class="dl-af-row">
+          <span style="font-size:13px;flex-shrink:0">🔗</span>
+          <input type="url" class="dl-af-input" id="daf-link" placeholder="Attach a link (optional)…" style="flex:1">
+        </div>
         <div class="dl-af-btns">
           <button class="dl-af-cancel" id="daf-cancel">Cancel</button>
           <button class="dl-af-save"   id="daf-save">Add Deadline</button>
@@ -45,9 +49,10 @@ window.DeadlinesView = (() => {
       const date=document.getElementById('daf-date').value;
       const time=document.getElementById('daf-time').value;
       const urgent=document.getElementById('daf-urgent').checked;
+      const link=(document.getElementById('daf-link')||{}).value.trim()||'';
       if(!title||!date){Toast.show('Title and date required','error');return;}
       try{
-        await API.createDeadline({title,date,time:time||null,urgent});
+        await API.createDeadline({title,date,time:time||null,urgent,link:link||null});
         _showForm=false; area.innerHTML='';
         await _loadAndRender();
         Toast.show('Deadline added ✓','success');

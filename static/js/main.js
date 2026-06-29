@@ -37,6 +37,9 @@ window.TaskEditor = (() => {
     // Time
     const timeEl = document.getElementById('tem-time');
     if (timeEl) timeEl.value = task ? (task.time||'') : '';
+    // Link
+    const linkEl = document.getElementById('tem-link');
+    if (linkEl) linkEl.value = task ? (task.link||'') : '';
     // Font color dots — restore active state and apply live preview to title
     const fcActive = task ? (task.font_color||'') : '';
     document.querySelectorAll('#tem-font-color-dots .rcd-dot').forEach(d => {
@@ -165,6 +168,7 @@ window.TaskEditor = (() => {
       const date     = document.getElementById('tem-date').value;
       const desc     = Editor.getHTML(document.getElementById('tem-description'));
       const taskTime  = (document.getElementById('tem-time')||{}).value || '';
+      const taskLink  = (document.getElementById('tem-link')||{}).value.trim() || '';
       const fcDot = document.querySelector('#tem-font-color-dots .rcd-dot.active');
       const fontColor = fcDot ? (fcDot.dataset.color || '') : '';
       const recurToggle = document.getElementById('tem-recur-toggle');
@@ -179,6 +183,7 @@ window.TaskEditor = (() => {
         time: taskTime,
         bg_color: _bgColor || '',
         font_color: fontColor,
+        link: taskLink,
       };
 
       // Only include recur fields when the toggle is checked (creating/updating recurrence)
@@ -243,7 +248,9 @@ window.NoteEditor = (() => {
       d.classList.toggle('active', d.dataset.color===_color);
     });
 
-    // Font color no longer in header — cleared
+    // Link
+    const nemLink = document.getElementById('nem-link');
+    if (nemLink) nemLink.value = note ? (note.link||'') : '';
 
     backdrop.classList.remove('hidden');
     document.getElementById('nem-title').focus();
@@ -281,14 +288,15 @@ window.NoteEditor = (() => {
     document.getElementById('nem-save').onclick = async () => {
       const title   = document.getElementById('nem-title').value.trim();
       const content = Editor.getHTML(document.getElementById('nem-content'));
+      const noteLink = (document.getElementById('nem-link')||{}).value.trim() || '';
       const date    = _note ? _note.date : Store.todayStr();
       if (!content) { Toast.show('Content cannot be empty','error'); return; }
       try {
         if (_note) {
-          await API.updateNote(_note.id,{title,content,color:_color,font_color:_fontColor});
+          await API.updateNote(_note.id,{title,content,color:_color,font_color:_fontColor,link:noteLink});
           Toast.show('Note saved ✓','success');
         } else {
-          await API.createNote({title,content,color:_color,font_color:_fontColor,date});
+          await API.createNote({title,content,color:_color,font_color:_fontColor,link:noteLink,date});
           Toast.show('Note created ✓','success');
         }
         _close();

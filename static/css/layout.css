@@ -20,10 +20,18 @@
 .sb-user-info{flex:1;min-width:0}
 .sb-username{font-size:12px;font-weight:600;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sb-email{font-size:10px;color:var(--tx3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sb-logout{width:28px;height:28px;border-radius:var(--r6);color:var(--tx3);font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
-.sb-logout:hover{background:var(--danger-dim);color:var(--danger)}
-.sb-delete-account{width:24px;height:24px;border-radius:var(--r6);color:var(--tx3);font-size:11px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;opacity:.5}
-.sb-delete-account:hover{background:var(--danger-dim);color:var(--danger);opacity:1}
+
+/* Account actions row — separate section below user info */
+.sb-account-actions{display:flex;flex-direction:column;gap:2px;padding:6px 8px;border-bottom:1px solid var(--border);flex-shrink:0}
+.sb-logout-btn,.sb-delete-btn{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--r6);font-size:12px;font-weight:500;transition:all .15s;width:100%;text-align:left}
+.sba-icon{font-size:13px;width:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sba-label{color:var(--tx2);white-space:nowrap;overflow:hidden}
+.sb-logout-btn{color:var(--tx3)}
+.sb-logout-btn:hover{background:var(--danger-dim);color:var(--danger)}
+.sb-logout-btn:hover .sba-label{color:var(--danger)}
+.sb-delete-btn{color:var(--tx3);opacity:.6}
+.sb-delete-btn:hover{background:var(--danger-dim);color:var(--danger);opacity:1}
+.sb-delete-btn:hover .sba-label{color:var(--danger)}
 
 /* Nav */
 .sb-nav{flex:1;padding:8px 6px;display:flex;flex-direction:column;gap:1px;overflow-y:auto;overflow-x:hidden}
@@ -56,8 +64,7 @@
 #app-shell.sidebar-collapsed .sb-name,
 #app-shell.sidebar-collapsed .sb-sub,
 #app-shell.sidebar-collapsed .sb-user-info,
-#app-shell.sidebar-collapsed .sb-logout,
-#app-shell.sidebar-collapsed .sb-delete-account,
+#app-shell.sidebar-collapsed .sb-account-actions,
 #app-shell.sidebar-collapsed .sb-section-label,
 #app-shell.sidebar-collapsed .sb-link-text,
 #app-shell.sidebar-collapsed .sb-link-count,
@@ -67,10 +74,9 @@
 #app-shell.sidebar-collapsed .sb-brand{justify-content:center;padding:0}
 #app-shell.sidebar-collapsed .sb-user{justify-content:center;padding:9px}
 
-/* Mobile sidebar overlay — always show logout/delete regardless of collapsed state */
+/* Mobile sidebar overlay — always show all sections regardless of collapsed state */
 @media(max-width:900px){
-  #sidebar.mobile-open .sb-logout,
-  #sidebar.mobile-open .sb-delete-account,
+  #sidebar.mobile-open .sb-account-actions,
   #sidebar.mobile-open .sb-user-info,
   #sidebar.mobile-open .sb-name,
   #sidebar.mobile-open .sb-sub,
@@ -79,15 +85,16 @@
   #sidebar.mobile-open .sb-quick-add,
   #sidebar.mobile-open .sb-summary,
   #sidebar.mobile-open .sb-section-label{display:flex}
+  #sidebar.mobile-open .sb-account-actions{flex-direction:column}
   #sidebar.mobile-open .sb-link-count,
   #sidebar.mobile-open .sb-summary,
   #sidebar.mobile-open .sb-section-label{display:block}
   #sidebar.mobile-open .sb-link{justify-content:flex-start;padding:8px 10px}
   #sidebar.mobile-open .sb-brand{justify-content:flex-start;padding:0 14px}
   #sidebar.mobile-open .sb-user{justify-content:flex-start;padding:10px 12px}
-  /* bigger touch targets */
-  .sb-logout{width:36px;height:36px;font-size:16px}
-  .sb-delete-account{width:32px;height:32px;font-size:14px;opacity:.7}
+  /* bigger touch targets on mobile */
+  .sb-logout-btn,.sb-delete-btn{padding:10px 12px;font-size:13px}
+  .sba-icon{font-size:15px}
 }
 
 /* ── Topbar ── */
